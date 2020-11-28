@@ -2,4 +2,6 @@
 
 using namespace std;
 
-TextModel::TextModel(string &filename) { cout << filename << endl; }
+TextModel::TextModel(string &filename) { renderer = make_unique<Renderer>(); }
+
+void TextModel::run() { renderer->render(); }
