@@ -1,3 +1,5 @@
+bin
+objs
 .DS_store
 *.out
 *.d
