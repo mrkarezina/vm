@@ -1,4 +1,4 @@
-CXX = g++
+CXX = g++ -lncurses
 CXXFLAGS = -std=c++14 -Wall -MMD
 EXEC = vm
 SRCDIR = src
