@@ -4,11 +4,13 @@
 #include <iostream>
 
 #include "view-base.h"
+#include "text_model.h"
+#include "window.h"
 
 class ViewText : public ViewBase {
  public:
-  ViewText(){};
-  void draw() override;
+  ViewText() {};
+  void draw(TextModel *model) override;
 };
 
 #endif

@@ -1,7 +1,10 @@
 #include "view-text.h"
 
-// TODO: Pull text from the model and display
+using namespace std;
 
-void ViewText::draw() {
-    std::cout << "Draw fun" << std::endl;
+void ViewText::draw(TextModel *model) {
+    const shared_ptr<vector<string>> lines = model->getLines();
+    for (auto l = lines->begin(); l != lines->end(); ++l) {
+        cout << *l << endl;
+    }
 }
