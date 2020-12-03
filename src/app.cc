@@ -2,10 +2,22 @@
 
 using namespace std;
 
-App::App() {
-  // TODO: parse command line args
-  string m = "test";
-  text_model = make_shared<TextModel>(m);
+void initialize_curses() {
+  // ncurses initialization
+  initscr();
+  cbreak();
+  noecho();
+  keypad(stdscr, TRUE);
 }
 
-void App::run() { std::cout << "Hello word!" << std::endl; }
+App::App() {
+  // TODO: parse command line args
+  initialize_curses();
+  string m = "test";
+  text_model = make_shared<TextModel>(m);
+  text_model->addView(unique_ptr<ViewText>(new ViewText()));
+}
+
+void App::run() { 
+  text_model->run();
+ }

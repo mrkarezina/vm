@@ -2,14 +2,16 @@
 #define VIEW_TEXT_H
 
 #include <iostream>
+#include <memory>
 
-#include "view-base.h"
 #include "text_model.h"
+#include "view-base.h"
 #include "window.h"
 
 class ViewText : public ViewBase {
+  std::unique_ptr<Window> win;
  public:
-  ViewText() {};
+  ViewText();
   void draw(TextModel *model) override;
 };
 
