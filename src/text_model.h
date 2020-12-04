@@ -14,8 +14,8 @@ class ViewBase;
 class CmdBase;
 class Controller;
 
-// TODO: need seperate structure for data location
-// Ie: wrapped line, does not mean writing to 'lines' second line
+// TODO: view should caculate wrap (+ offest for cursor on wrapped line).
+// Cursor points to write posn in data.
 struct Cursor {
   int x;
   int y;
