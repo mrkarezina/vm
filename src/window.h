@@ -14,11 +14,11 @@ class Window {
   Window(float h_perc, float w_perc, int x, int y);
   ~Window();
 
-  void refresh();
+  void refresh_w();
   void erase_w();
   void writeChar(char c);
   void writeChar(char c, int x, int y);
-  void move(int x, int y);
+  void move_w(int x, int y);
 
 };
 

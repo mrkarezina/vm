@@ -9,15 +9,15 @@ Window::Window(float w_perc, float h_perc, int x, int y) {
 
 Window::~Window() { delwin(win); }
 
-void Window::refresh() { wrefresh(win); }
+void Window::refresh_w() { wrefresh(win); }
 
 void Window::erase_w() { werase(win); }
 
 void Window::writeChar(char c, int x, int y) {
-  move(x, y);
+  move_w(x, y);
   waddch(win, c);
 }
 
 void Window::writeChar(char c) { waddch(win, c); }
 
-void Window::move(int x, int y) { wmove(win, y, x); }
+void Window::move_w(int x, int y) { wmove(win, y, x); }

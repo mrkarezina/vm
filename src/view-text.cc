@@ -15,5 +15,5 @@ void ViewText::draw(TextModel *model) {
     }
     // cout << endl;
   }
-  win->refresh();
+  win->refresh_w();
 }
