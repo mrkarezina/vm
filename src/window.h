@@ -15,6 +15,7 @@ class Window {
   ~Window();
 
   void refresh();
+  void erase_w();
   void writeChar(char c);
   void writeChar(char c, int x, int y);
   void move(int x, int y);

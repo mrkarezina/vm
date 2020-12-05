@@ -11,6 +11,8 @@ Window::~Window() { delwin(win); }
 
 void Window::refresh() { wrefresh(win); }
 
+void Window::erase_w() { werase(win); }
+
 void Window::writeChar(char c, int x, int y) {
   move(x, y);
   waddch(win, c);

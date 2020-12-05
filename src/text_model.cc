@@ -27,15 +27,22 @@ const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 void TextModel::writeChar(char c, int x, int y) { lines->at(y)[x] = c; }
 
 void TextModel::addChar(char c, int x, int y) {
-  if (y > lines->size()) {
-    throw text_range_access();
-  }
-  if (y == lines->size()) {
+  while (y >= lines->size()) {
     lines->push_back("");
   }
-  
+  if (x > lines->at(y).size()) {
+    throw text_range_access();
+  }
   // Add character before cursor (so right at index)
   lines->at(y).insert(x, string{c});
+}
+
+// Adds a newline splitting text line in two
+void TextModel::new_line(int x, int y) {
+  string left = lines->at(y).substr(0, x);
+  string right = lines->at(y).substr(x);
+  lines->at(y) = left;
+  lines->insert(lines->begin() + y + 1, right);
 }
 
 void TextModel::setX(int x) { cur_posn.x = x; }

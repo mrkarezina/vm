@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "view-base.h"
-#include "controller.h"
 #include "cmd-base.h"
+#include "controller.h"
+#include "view-base.h"
 
 class ViewBase;
 class CmdBase;
@@ -40,6 +40,7 @@ class TextModel {
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);
   void addChar(char c, int x, int y);
+  void new_line(int x, int y);
 
   void setX(int x);
   void setY(int y);
