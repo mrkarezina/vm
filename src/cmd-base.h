@@ -3,6 +3,8 @@
 
 #include "text_model.h"
 
+class TextModel;
+
 class CmdBase {
  public:
   virtual ~CmdBase() = default;
