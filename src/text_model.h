@@ -41,6 +41,8 @@ class TextModel {
   void writeChar(char c, int x, int y);
   void addChar(char c, int x, int y);
   void new_line(int x, int y);
+  void delete_char(int x, int y);
+  void delete_line(int x, int y, bool concat);
 
   void setX(int x);
   void setY(int y);

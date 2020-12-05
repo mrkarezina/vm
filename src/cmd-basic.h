@@ -10,4 +10,9 @@ class CmdWrite : public CmdBase {
   void exec(TextModel *model);
 };
 
+class CmdDel : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
 #endif
