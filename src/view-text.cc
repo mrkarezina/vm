@@ -10,7 +10,7 @@ void ViewText::draw(TextModel *model) {
   for (size_t i = 0; i < lines->size(); i++) {
     string l = lines->at(i);
     for (size_t j = 0; j < l.size(); j++) {
-      win->writeChar(l[j], j, i);
+      win->write_char(l[j], j, i);
       // cout << l[j];
     }
     // cout << endl;
