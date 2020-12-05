@@ -15,5 +15,6 @@ void ViewText::draw(TextModel *model) {
     }
     // cout << endl;
   }
+  win->move_w(model->getX(), model->getY());
   win->refresh_w();
 }
