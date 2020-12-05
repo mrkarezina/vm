@@ -16,7 +16,11 @@ Controller::Controller() {
 
 unique_ptr<CmdBase> Controller::parse_input() {
     int c = getch();
-    // TODO: how to map to input
+    
+    if(c == 10) return make_unique<CmdWrite>('\n');
+    if(c == 127 || c==KEY_BACKSPACE) return make_unique<CmdDel>();
+
+    // In insert mode write pretty much any character to screen, except esc
     return make_unique<CmdWrite>(c);
 }
 
