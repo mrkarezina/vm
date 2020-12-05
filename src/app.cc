@@ -5,6 +5,7 @@ using namespace std;
 void initialize_curses() {
   // ncurses initialization
   initscr();
+  refresh();
   cbreak();
   noecho();
   keypad(stdscr, TRUE);
