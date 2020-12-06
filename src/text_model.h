@@ -26,6 +26,7 @@ class TextModel {
   std::vector<std::unique_ptr<ViewBase>> views;
   Cursor cur_posn{0, 0};
   std::unique_ptr<Controller> controller;
+  bool write_mode;
 
  public:
   TextModel(std::string &filename);
@@ -36,6 +37,8 @@ class TextModel {
   void render();
 
   void apply(std::unique_ptr<CmdBase> cmd);
+
+  void toggle_mode();
 
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);

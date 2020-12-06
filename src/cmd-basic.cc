@@ -32,3 +32,8 @@ void CmdDel::exec(TextModel *model) {
     }
   }
 }
+
+void CmdEsc::exec(TextModel *model) {
+  // Change text model state to insert / write model
+  model->toggle_mode();
+}

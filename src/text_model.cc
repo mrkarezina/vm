@@ -7,6 +7,7 @@ class text_range_access {};
 TextModel::TextModel(string &filename) {
   lines = make_shared<vector<string>>();
   controller = make_unique<Controller>();
+  write_mode = false;
 
   // TODO: tmp before reading from file
   lines->push_back("Test 1");
@@ -20,6 +21,10 @@ void TextModel::run() {
     render();
     apply(controller->parse_input());
   }
+}
+
+void TextModel::toggle_mode() {
+  write_mode = !write_mode;
 }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }

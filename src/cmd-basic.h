@@ -15,4 +15,10 @@ class CmdDel : public CmdBase {
   void exec(TextModel *model);
 };
 
+class CmdEsc : public CmdBase {
+  public:
+    void exec(TextModel *model);
+};
+
+
 #endif
