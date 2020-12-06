@@ -6,7 +6,7 @@ class text_range_access {};
 
 TextModel::TextModel(string &filename) {
   lines = make_shared<vector<string>>();
-  controller = make_unique<Controller>();
+  controller = make_unique<Controller>(this);
   write_mode = false;
 
   // TODO: tmp before reading from file

@@ -26,4 +26,16 @@ class CmdEnter : public CmdBase {
   void exec(TextModel *model);
 };
 
+class CmdMove : public CmdBase {
+  char move;
+ public:
+  CmdMove(char c);
+  void exec(TextModel *model);
+};
+
+class CmdStall : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
 #endif

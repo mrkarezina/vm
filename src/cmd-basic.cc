@@ -34,7 +34,48 @@ void CmdDel::exec(TextModel *model) {
   }
 }
 
-void CmdEsc::exec(TextModel *model) {
-  // Change text model state to insert / write model
-  model->toggle_mode();
+void CmdEsc::exec(TextModel *model) { model->toggle_mode(); }
+
+CmdMove::CmdMove(char c) : move{c} {}
+
+void CmdMove::exec(TextModel *model) {
+  int x = model->getX();
+  int y = model->getY();
+
+  if (move == 'h') {
+    if (x > 0)
+      model->setX(x - 1);
+    else
+      beep();
+  }
+
+  if (move == 'l') {
+    // if(x==0) {
+    //   std::cout << "SIZE: " << model->getLines()->at(y).size() << std::endl;
+    // }
+    if (x + 1 < model->getLines()->at(y).size())
+      model->setX(x + 1);
+    else
+      beep();
+  }
+  // Up
+  if (move == 'k') {
+    if (y > 0) {
+      model->setY(y - 1);
+      int new_x = model->getLines()->at(y - 1).size();
+      if (x >= new_x) model->setX(new_x == 0 ? new_x : new_x - 1);
+    } else
+      beep();
+  }
+  // Down
+  if (move == 'j') {
+    if (y < model->getLines()->size() - 1) {
+      model->setY(y + 1);
+      int new_x = model->getLines()->at(y + 1).size();
+      if (x >= new_x) model->setX(new_x == 0 ? new_x : new_x - 1);
+    } else
+      beep();
+  }
 }
+
+void CmdStall::exec(TextModel *model) {}
