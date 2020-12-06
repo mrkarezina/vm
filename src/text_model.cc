@@ -23,9 +23,9 @@ void TextModel::run() {
   }
 }
 
-void TextModel::toggle_mode() {
-  write_mode = !write_mode;
-}
+void TextModel::toggle_mode() { write_mode = !write_mode; }
+
+bool TextModel::get_write_mode() { return write_mode; }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 
@@ -53,16 +53,14 @@ void TextModel::new_line(int x, int y) {
 // concat=true implements backspace functionality
 // concat's deleted line to previous
 void TextModel::delete_line(int x, int y, bool concat) {
-  if(concat) {
+  if (concat) {
     string right = lines->at(y).substr(x);
     lines->at(y - 1) = lines->at(y - 1) + right;
   }
-  lines->erase(lines->begin()+y);
+  lines->erase(lines->begin() + y);
 }
 
-void TextModel::delete_char(int x, int y) {
-  lines->at(y).erase(x - 1, 1);
-}
+void TextModel::delete_char(int x, int y) { lines->at(y).erase(x - 1, 1); }
 
 void TextModel::setX(int x) { cur_posn.x = x; }
 

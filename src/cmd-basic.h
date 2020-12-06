@@ -4,7 +4,8 @@
 #include "cmd-base.h"
 
 class CmdWrite : public CmdBase {
- char toWrite;
+  char toWrite;
+
  public:
   CmdWrite(char c);
   void exec(TextModel *model);
@@ -16,9 +17,13 @@ class CmdDel : public CmdBase {
 };
 
 class CmdEsc : public CmdBase {
-  public:
-    void exec(TextModel *model);
+ public:
+  void exec(TextModel *model);
 };
 
+class CmdEnter : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
 
 #endif

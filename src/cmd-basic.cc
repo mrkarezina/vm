@@ -5,15 +5,16 @@ CmdWrite::CmdWrite(char c) : toWrite{c} {}
 void CmdWrite::exec(TextModel *model) {
   int x = model->getX();
   int y = model->getY();
-  // If enter
-  if (toWrite == '\n') {
-    model->new_line(x, y);
-    model->setX(0);
-    model->setY(y + 1);
-  } else {
-    model->addChar(toWrite, x, y);
-    model->setX(x + 1);
-  }
+  if (model->get_write_mode()) model->addChar(toWrite, x, y);
+  model->setX(x + 1);
+}
+
+void CmdEnter::exec(TextModel *model) {
+  int x = model->getX();
+  int y = model->getY();
+  if (model->get_write_mode()) model->new_line(x, y);
+  model->setX(0);
+  model->setY(y + 1);
 }
 
 void CmdDel::exec(TextModel *model) {
@@ -23,11 +24,11 @@ void CmdDel::exec(TextModel *model) {
     if (x == 0) {
       // Set x to length of prev line
       int new_x = model->getLines()->at(y - 1).size();
-      model->delete_line(x, y, true);
+      if (model->get_write_mode()) model->delete_line(x, y, true);
       model->setX(new_x);
       model->setY(y - 1);
     } else {
-      model->delete_char(x, y);
+      if (model->get_write_mode()) model->delete_char(x, y);
       model->setX(x - 1);
     }
   }
