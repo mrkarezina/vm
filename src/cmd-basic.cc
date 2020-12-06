@@ -12,25 +12,46 @@ void CmdWrite::exec(TextModel *model) {
 void CmdEnter::exec(TextModel *model) {
   int x = model->getX();
   int y = model->getY();
-  if (model->get_write_mode()) model->new_line(x, y);
-  model->setX(0);
-  model->setY(y + 1);
+  if (model->get_write_mode()) {
+    model->new_line(x, y);
+    model->setX(0);
+    model->setY(y + 1);
+  } else {
+    if (y < model->getLines()->size() - 1) {
+      model->setX(0);
+      model->setY(y + 1);
+    } else
+      beep();
+  }
 }
 
 void CmdDel::exec(TextModel *model) {
   int x = model->getX();
   int y = model->getY();
   if (x > 0 || y > 0) {
-    if (x == 0) {
-      // Set x to length of prev line
-      int new_x = model->getLines()->at(y - 1).size();
-      if (model->get_write_mode()) model->delete_line(x, y, true);
-      model->setX(new_x);
-      model->setY(y - 1);
+    if (model->get_write_mode()) {
+      if (x == 0) {
+        // Set x to length of prev line
+        int new_x = model->getLines()->at(y - 1).size();
+        model->delete_line(x, y, true);
+        model->setX(new_x);
+        model->setY(y - 1);
+      } else {
+        model->delete_char(x, y);
+        model->setX(x - 1);
+      }
     } else {
-      if (model->get_write_mode()) model->delete_char(x, y);
-      model->setX(x - 1);
+      if (x == 0) {
+        // Move to end and up
+        int new_x = model->getLines()->at(y - 1).size();
+        model->setX(new_x == 0 ? new_x : new_x - 1);
+        model->setY(y - 1);
+      } else {
+        model->setX(x - 1);
+      }
     }
+  } else {
+    beep();
   }
 }
 
