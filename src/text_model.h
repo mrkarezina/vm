@@ -9,6 +9,7 @@
 #include "cmd-base.h"
 #include "controller.h"
 #include "view-base.h"
+#include "file_util.h"
 
 class ViewBase;
 class CmdBase;

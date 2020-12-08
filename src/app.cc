@@ -14,7 +14,7 @@ void initialize_curses() {
 App::App() {
   // TODO: parse command line args
   initialize_curses();
-  string m = "test";
+  string m = "tests/test.txt";
   text_model = make_shared<TextModel>(m);
   text_model->addView(unique_ptr<ViewCmdBar>(new ViewCmdBar()));
   text_model->addView(unique_ptr<ViewText>(new ViewText()));

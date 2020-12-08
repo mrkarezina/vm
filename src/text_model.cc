@@ -5,13 +5,13 @@ using namespace std;
 class text_range_access {};
 
 TextModel::TextModel(string &filename) {
-  lines = make_shared<vector<string>>();
   controller = make_unique<Controller>(this);
   write_mode = false;
 
-  // TODO: tmp before reading from file
-  lines->push_back("Test 1");
-  lines->push_back("Test 2");
+  // lines = make_shared<vector<string>>();
+  // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1");
+  // lines->push_back("Test 2");
+  lines = load_lines(filename);
 }
 
 TextModel::~TextModel() {}
