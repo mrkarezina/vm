@@ -25,7 +25,7 @@ void TextModel::run() {
 
 void TextModel::toggle_mode() { write_mode = !write_mode; }
 
-bool TextModel::get_write_mode() { return write_mode; }
+bool TextModel::is_write_mode() { return write_mode; }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 

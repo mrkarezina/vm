@@ -40,7 +40,7 @@ class TextModel {
   void apply(std::unique_ptr<CmdBase> cmd);
 
   void toggle_mode();
-  bool get_write_mode();
+  bool is_write_mode();
 
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);
