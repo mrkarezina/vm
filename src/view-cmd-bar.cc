@@ -9,6 +9,7 @@ ViewCmdBar::ViewCmdBar() {
 }
 
 void ViewCmdBar::draw(TextModel *model) {
+  win->erase_w();
   win->write_line("Command bar ...", 0, 0);
   win->refresh_w();
 }
