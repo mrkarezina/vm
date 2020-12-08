@@ -4,12 +4,13 @@ using namespace std;
 
 class text_range_access {};
 
-TextModel::TextModel(string &filename) {
+TextModel::TextModel(string &filename) : filename{filename} {
   controller = make_unique<Controller>(this);
   write_mode = false;
 
   // lines = make_shared<vector<string>>();
-  // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1");
+  // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1
+  // Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1");
   // lines->push_back("Test 2");
   lines = load_lines(filename);
 }
@@ -26,6 +27,8 @@ void TextModel::run() {
 void TextModel::toggle_mode() { write_mode = !write_mode; }
 
 bool TextModel::is_write_mode() { return write_mode; }
+
+string TextModel::get_file_name() { return filename; }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 

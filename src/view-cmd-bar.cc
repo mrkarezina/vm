@@ -10,6 +10,10 @@ ViewCmdBar::ViewCmdBar() {
 
 void ViewCmdBar::draw(TextModel *model) {
   win->erase_w();
-  win->write_line("Command bar ...", 0, 0);
+  if (model->is_write_mode()) {
+    win->write_line("-- INSERT --", 0, 0);
+  } else {
+    win->write_line("\"" + model->get_file_name() + "\"", 0, 0);
+  }
   win->refresh_w();
 }

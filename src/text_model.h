@@ -8,8 +8,8 @@
 
 #include "cmd-base.h"
 #include "controller.h"
-#include "view-base.h"
 #include "file_util.h"
+#include "view-base.h"
 
 class ViewBase;
 class CmdBase;
@@ -27,6 +27,7 @@ class TextModel {
   std::vector<std::unique_ptr<ViewBase>> views;
   Cursor cur_posn{0, 0};
   std::unique_ptr<Controller> controller;
+  std::string filename;
   bool write_mode;
 
  public:
@@ -41,6 +42,7 @@ class TextModel {
 
   void toggle_mode();
   bool is_write_mode();
+  std::string get_file_name();
 
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);
