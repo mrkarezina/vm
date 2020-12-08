@@ -13,6 +13,7 @@ class ViewText : public ViewBase {
   void draw_tilda(int x, int y);
   int get_view_x(TextModel *model);
   int get_view_y(TextModel *model);
+  int get_y_offset(int ln, TextModel *model);
  public:
   ViewText();
   void draw(TextModel *model) override;
