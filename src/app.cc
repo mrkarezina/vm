@@ -16,6 +16,7 @@ App::App() {
   initialize_curses();
   string m = "test";
   text_model = make_shared<TextModel>(m);
+  text_model->addView(unique_ptr<ViewCmdBar>(new ViewCmdBar()));
   text_model->addView(unique_ptr<ViewText>(new ViewText()));
 }
 

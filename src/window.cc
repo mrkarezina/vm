@@ -22,8 +22,11 @@ void Window::refresh_w() { wrefresh(win); }
 void Window::erase_w() { werase(win); }
 
 void Window::write_char(char c, int x, int y) {
-  move_w(x, y);
-  waddch(win, c);
+  mvwaddch(win, y, x, c);
+}
+
+void Window::write_line(std::string s, int x, int y) {
+  mvwprintw(win, y, x, s.c_str());
 }
 
 void Window::write_char(char c) { waddch(win, c); }
