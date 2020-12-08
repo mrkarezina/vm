@@ -12,14 +12,17 @@ class Window {
  public:
   Window();
   Window(float h_perc, float w_perc, int x, int y);
+  Window(int width, int height, int x, int y);
   ~Window();
+
+  int getHeight();
+  int getWidth();
 
   void refresh_w();
   void erase_w();
   void write_char(char c);
   void write_char(char c, int x, int y);
   void move_w(int x, int y);
-
 };
 
 #endif

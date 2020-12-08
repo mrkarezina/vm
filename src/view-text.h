@@ -10,6 +10,7 @@
 
 class ViewText : public ViewBase {
   std::unique_ptr<Window> win;
+  void draw_tilda(int x, int y);
  public:
   ViewText();
   void draw(TextModel *model) override;

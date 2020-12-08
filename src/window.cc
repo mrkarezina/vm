@@ -7,7 +7,15 @@ Window::Window(float w_perc, float h_perc, int x, int y) {
   win = newwin(height * h_perc, width * w_perc, y, x);
 }
 
+Window::Window(int width, int height, int x, int y)
+    : width{width}, height{height} {
+  win = newwin(height, width, y, x);
+}
+
 Window::~Window() { delwin(win); }
+
+int Window::getHeight() { return height; }
+int Window::getWidth() { return width; }
 
 void Window::refresh_w() { wrefresh(win); }
 

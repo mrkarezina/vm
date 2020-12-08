@@ -2,7 +2,16 @@
 
 using namespace std;
 
-ViewText::ViewText() { win = make_unique<Window>(1, 0.75, 0, 0); }
+ViewText::ViewText() { 
+  int height, width;
+  getmaxyx(stdscr, height, width);
+  win = make_unique<Window>(width, height - 1, 0, 0);
+ }
+
+ void ViewText::draw_tilda(int x, int y) {
+   // TODO: color tilda
+   win->write_char('~', x, y);
+ }
 
 void ViewText::draw(TextModel *model) {
   win->erase_w();
@@ -15,6 +24,11 @@ void ViewText::draw(TextModel *model) {
     }
     // cout << endl;
   }
+
+  for(size_t i = lines->size(); i < win->getHeight(); i++) {
+    draw_tilda(0, i);
+  }
+
   win->move_w(model->getX(), model->getY());
   win->refresh_w();
 }
