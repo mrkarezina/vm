@@ -36,27 +36,39 @@ int ViewText::get_view_x(TextModel *model) {
   return model->getX() % win->getWidth();
 }
 
+void ViewText::set_scroll_focus_y(TextModel *model) {
+  int max_diff = 0.75 * win->getHeight();
+  int max_close = 0.25 * win->getHeight();
+  int y = get_view_y(model);
+
+  // Scroll down if Y greater than what fits in window
+  if (y - scroll_focus_y > max_diff) scroll_focus_y = y - max_diff;
+  // Scroll up
+  if (y - scroll_focus_y < max_close && scroll_focus_y > 0) {
+    scroll_focus_y = y - max_close;
+  }
+}
+
 void ViewText::draw(TextModel *model) {
   win->erase_w();
   const shared_ptr<vector<string>> lines = model->getLines();
 
-  int curx = get_view_x(model);
-  int cury = get_view_y(model);
+  set_scroll_focus_y(model);
 
   int y_offset = 0;
   for (size_t i = 0; i < lines->size(); i++) {
-    // TODO: scroll
-    // if the y_offset is within the range of
-    // cursor translated y then print
-
-    win->write_line(lines->at(i), 0, y_offset);
+    // Check if current line within scroll location
+    if (scroll_focus_y <= y_offset &&
+        y_offset < scroll_focus_y + win->getHeight()) {
+      win->write_line(lines->at(i), 0, y_offset - scroll_focus_y);
+    }
     y_offset += get_y_offset(i, model);
   }
 
-  for (size_t i = y_offset; i < win->getHeight(); i++) {
+  for (size_t i = y_offset - scroll_focus_y; i < win->getHeight(); i++) {
     draw_tilda(0, i);
   }
 
-  win->move_w(curx, cury);
+  win->move_w(get_view_x(model), get_view_y(model) - scroll_focus_y);
   win->refresh_w();
 }
