@@ -11,15 +11,11 @@ void initialize_curses() {
   keypad(stdscr, TRUE);
 }
 
-App::App() {
-  // TODO: parse command line args
+App::App(std::string file) {
   initialize_curses();
-  string m = "tests/test.txt";
-  text_model = make_shared<TextModel>(m);
+  text_model = make_shared<TextModel>(file);
   text_model->addView(unique_ptr<ViewCmdBar>(new ViewCmdBar()));
   text_model->addView(unique_ptr<ViewText>(new ViewText()));
 }
 
-void App::run() { 
-  text_model->run();
- }
+void App::run() { text_model->run(); }
