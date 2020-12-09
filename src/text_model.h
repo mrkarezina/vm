@@ -28,7 +28,9 @@ class TextModel {
   Cursor cur_posn{0, 0};
   std::unique_ptr<Controller> controller;
   std::string filename;
+  bool render_loop_on = true;
   bool write_mode;
+  std::string cmd_so_far;
 
  public:
   TextModel(std::string &filename);
@@ -41,8 +43,13 @@ class TextModel {
   void apply(std::unique_ptr<CmdBase> cmd);
 
   void toggle_mode();
+  void set_render_loop_off();
   bool is_write_mode();
   std::string get_file_name();
+  void save_lines();
+
+  std::string get_cmd_so_far();
+  void set_cmd_so_far(std::string cmd);
 
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);

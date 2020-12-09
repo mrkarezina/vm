@@ -18,7 +18,7 @@ TextModel::TextModel(string &filename) : filename{filename} {
 TextModel::~TextModel() {}
 
 void TextModel::run() {
-  while (true) {
+  while (render_loop_on) {
     render();
     apply(controller->parse_input());
   }
@@ -28,7 +28,15 @@ void TextModel::toggle_mode() { write_mode = !write_mode; }
 
 bool TextModel::is_write_mode() { return write_mode; }
 
+void TextModel::set_render_loop_off() { render_loop_on = false; }
+
 string TextModel::get_file_name() { return filename; }
+
+void TextModel::save_lines() { write_lines(filename, lines); }
+
+string TextModel::get_cmd_so_far() { return cmd_so_far; }
+
+void TextModel::set_cmd_so_far(string cmd) { cmd_so_far = cmd; }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 

@@ -11,23 +11,42 @@ Controller::Controller(TextModel *model) : model{model} {}
 unique_ptr<CmdBase> Controller::parse_input() {
   set_escdelay(0);
   int c = getch();
+  unique_ptr<CmdBase> cmd = nullptr;
 
-  if (c == 10) return make_unique<CmdEnter>();
-  if (c == 127 || c == KEY_BACKSPACE) return make_unique<CmdDel>();
-  if (c == 27 && model->is_write_mode()) return make_unique<CmdEsc>();
-  if (c == 'i' && !model->is_write_mode()) {
-    model->toggle_mode();
-    return make_unique<CmdStall>();
-  };
+  string prev_cmd = model->get_cmd_so_far();
+  prev_cmd += c;
 
+  if (prev_cmd == ":wq") cmd = make_unique<CmdSaveExit>();
+
+  // Command mode
   if (!model->is_write_mode()) {
-    // Handle single character command mode commands
+    if (c == 'i') {
+      model->toggle_mode();
+      cmd = make_unique<CmdStall>();
+    }
+    // Handle single character movement commands
     if (c == 'h' || c == 'j' || c == 'k' || c == 'l')
-      return make_unique<CmdMove>(c);
-  } else {
-    return make_unique<CmdWrite>(c);
+      cmd = make_unique<CmdMove>(c);
   }
 
-  // If nothing matched return stall command and keep parsing
-  return make_unique<CmdStall>();
+  // Command / write mode sensitive commands
+  if (c == 10) cmd = make_unique<CmdEnter>();
+  if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdDel>();
+  if (c == 27 && model->is_write_mode()) cmd = make_unique<CmdEsc>();
+
+  // Any character written in write mode
+  if (model->is_write_mode() && cmd == nullptr) {
+    cmd = make_unique<CmdWrite>(c);
+  }
+
+  if (cmd == nullptr) {
+    // Stall if command incomplete
+    cmd = make_unique<CmdStall>();
+    model->set_cmd_so_far(prev_cmd);
+  } else {
+    // Reset if command was matched
+    model->set_cmd_so_far("");
+  }
+
+  return cmd;
 }

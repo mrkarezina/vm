@@ -100,3 +100,9 @@ void CmdMove::exec(TextModel *model) {
 }
 
 void CmdStall::exec(TextModel *model) {}
+
+void CmdSaveExit::exec(TextModel *model) {
+  model->save_lines();
+  model->set_render_loop_off();
+  // That's all folks
+}
