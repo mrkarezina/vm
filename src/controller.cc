@@ -16,7 +16,12 @@ unique_ptr<CmdBase> Controller::parse_input() {
   string prev_cmd = model->get_cmd_so_far();
   prev_cmd += c;
 
+  // TODO: Colon commands to support
+  // :w :q :wq :q! :r :0 :$ :line-number
   if (prev_cmd == ":wq") cmd = make_unique<CmdSaveExit>();
+
+  // TODO: / and ? commands
+  // Search forward and backward
 
   // Command mode
   if (!model->is_write_mode()) {
@@ -28,6 +33,9 @@ unique_ptr<CmdBase> Controller::parse_input() {
     if (c == 'h' || c == 'j' || c == 'k' || c == 'l')
       cmd = make_unique<CmdMove>(c);
   }
+
+  if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
+  if (c == KEY_DOWN) cmd = make_unique<CmdMove>('j');
 
   // Command / write mode sensitive commands
   if (c == 10) cmd = make_unique<CmdEnter>();
