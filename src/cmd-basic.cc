@@ -215,3 +215,40 @@ void CmdsS::exec(TextModel *model) {
   }
   model->toggle_mode();
 }
+
+CmdcC::CmdcC(char c) : change_type{c} {}
+
+void CmdcC::exec(TextModel *model) {
+  string ln = model->get_line_at();
+
+  // cc, c$, cw
+  switch (change_type) {
+    case 'c': {
+      model->clear_line(model->getY());
+      model->setX(0);
+      break;
+    }
+    case '$': {
+      model->clear_line(model->getY());
+      model->setX(0);
+      break;
+    }
+    case 'w': {
+      size_t first = ln.find_first_of(' ', model->getX());
+      if (first == string::npos) {
+        // Clear from cur posn to end of line
+        model->set_line_at(ln.substr(0, model->getX()));
+      } else {
+        // Replace from cur posn to end of word
+        model->set_line_at(
+            ln.replace(model->getX(), first - model->getX(), ""));
+      }
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized change_type: " +
+                             to_string(change_type));
+      break;
+  }
+  model->toggle_mode();
+}

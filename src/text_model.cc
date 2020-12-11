@@ -40,6 +40,12 @@ void TextModel::set_cmd_so_far(string cmd) { cmd_so_far = cmd; }
 
 const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
 
+string TextModel::get_line_at(int y) { return lines->at(y == -1 ? getY() : y); }
+
+void TextModel::set_line_at(string s, int y) {
+  lines->at(y == -1 ? getY() : y) = s;
+}
+
 void TextModel::writeChar(char c, int x, int y) { lines->at(y)[x] = c; }
 
 void TextModel::addChar(char c, int x, int y) {
@@ -71,9 +77,7 @@ void TextModel::delete_line(int x, int y, bool concat) {
   lines->erase(lines->begin() + y);
 }
 
-void TextModel::clear_line(int y) {
-  lines->at(y) = "";
-}
+void TextModel::clear_line(int y) { lines->at(y) = ""; }
 
 void TextModel::delete_char(int x, int y) { lines->at(y).erase(x - 1, 1); }
 

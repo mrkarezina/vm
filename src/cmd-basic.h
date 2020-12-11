@@ -73,7 +73,7 @@ class CmdJump : public CmdBase {
 
 /**
  * Supports f[some char] command.
- * 
+ *
  * Supports ',' find next command.
  * Setting to_find to empty char '\0' will restore
  * previously searched for char and find next occurance.
@@ -90,7 +90,6 @@ class Cmdf : public CmdBase {
  * Substitute commands
  * s, S
  */
-
 class CmdsS : public CmdBase {
   char sub_type;
 
@@ -99,5 +98,16 @@ class CmdsS : public CmdBase {
   void exec(TextModel *model);
 };
 
+/**
+ * Change replace commands
+ * c[any motion], cc
+ */
+class CmdcC : public CmdBase {
+  char change_type;
+
+ public:
+  CmdcC(char c);
+  void exec(TextModel *model);
+};
 
 #endif

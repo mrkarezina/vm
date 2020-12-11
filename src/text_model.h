@@ -55,6 +55,9 @@ class TextModel {
   void save_state_data(std::string key, int data);
 
   const std::shared_ptr<std::vector<std::string>> getLines();
+  // Defaults to current cursor y position
+  std::string get_line_at(int y = -1);
+  void set_line_at(std::string s, int y = -1);
   void writeChar(char c, int x, int y);
   void addChar(char c, int x, int y);
   void new_line(int x, int y);
