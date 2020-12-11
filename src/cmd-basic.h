@@ -86,5 +86,18 @@ class Cmdf : public CmdBase {
   void exec(TextModel *model);
 };
 
+/**
+ * Substitute commands
+ * s, S
+ */
+
+class CmdsS : public CmdBase {
+  char sub_type;
+
+ public:
+  CmdsS(char c);
+  void exec(TextModel *model);
+};
+
 
 #endif

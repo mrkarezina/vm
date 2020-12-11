@@ -197,3 +197,21 @@ void Cmdf::exec(TextModel *model) {
   model->state_str["cmd_f_prev_char"] = to_find;
   model->state_int["cmd_f_prev_loc"] = pos;
 }
+
+CmdsS::CmdsS(char c) : sub_type{c} {}
+
+void CmdsS::exec(TextModel *model) {
+  switch (sub_type) {
+    case 's':
+      model->delete_char(model->getX() + 1, model->getY());
+      break;
+    case 'S':
+      model->clear_line(model->getY());
+      model->setX(0);
+      break;
+    default:
+      throw invalid_argument("Unrecognized sub_type: " + to_string(sub_type));
+      break;
+  }
+  model->toggle_mode();
+}

@@ -71,6 +71,10 @@ void TextModel::delete_line(int x, int y, bool concat) {
   lines->erase(lines->begin() + y);
 }
 
+void TextModel::clear_line(int y) {
+  lines->at(y) = "";
+}
+
 void TextModel::delete_char(int x, int y) { lines->at(y).erase(x - 1, 1); }
 
 void TextModel::setX(int x) { cur_posn.x = x; }

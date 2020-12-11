@@ -45,6 +45,9 @@ unique_ptr<CmdBase> Controller::parse_input() {
     if (cur_cmd == ";") {
       cmd = make_unique<Cmdf>('\0');
     }
+
+    // Substitute commands
+    if (cur_cmd == "s" || cur_cmd == "S") cmd = make_unique<CmdsS>(c);
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');

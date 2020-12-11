@@ -60,6 +60,7 @@ class TextModel {
   void new_line(int x, int y);
   void delete_char(int x, int y);
   void delete_line(int x, int y, bool concat);
+  void clear_line(int y);
 
   void setX(int x);
   void setY(int y);
