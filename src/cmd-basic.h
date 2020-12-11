@@ -61,7 +61,7 @@ class CmdSaveExit : public CmdBase {
 };
 
 /**
- * Supports e, b, 0, ^
+ * Supports e, b, 0, ^, $
  */
 class CmdJump : public CmdBase {
   char jump_type;
@@ -70,5 +70,21 @@ class CmdJump : public CmdBase {
   CmdJump(char c);
   void exec(TextModel *model);
 };
+
+/**
+ * Supports f[some char] command.
+ * 
+ * Supports ',' find next command.
+ * Setting to_find to empty char '\0' will restore
+ * previously searched for char and find next occurance.
+ */
+class Cmdf : public CmdBase {
+  char to_find;
+
+ public:
+  Cmdf(char c);
+  void exec(TextModel *model);
+};
+
 
 #endif

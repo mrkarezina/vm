@@ -140,26 +140,60 @@ void CmdSaveExit::exec(TextModel *model) {
 CmdJump::CmdJump(char c) : jump_type{c} {}
 
 void CmdJump::exec(TextModel *model) {
+  string ln = model->getLines()->at(model->getY());
+  size_t ln_size = ln.size();
+
   switch (jump_type) {
     case '0':
       model->setX(0);
       break;
     case '^': {
       // If no non-whitespace characters found move to end of line
-      string ln = model->getLines()->at(model->getY());
       size_t first = ln.find_first_not_of(' ');
-      size_t ln_size = ln.size();
       ln_size = ln_size == 0 ? 0 : ln_size - 1;
       model->setX(first == string::npos ? ln_size : first);
       break;
     }
-    // TODO
-    case 'b':
-    case 'e': {
+    case '$': {
+      ln_size = ln_size == 0 ? 0 : ln_size - 1;
+      model->setX(ln_size);
       break;
     }
+    // TODO
+    case 'b':
     default:
       throw invalid_argument("Unrecognized jump_type: " + to_string(jump_type));
       break;
   }
+}
+
+Cmdf::Cmdf(char c) : to_find{c} {}
+
+void Cmdf::exec(TextModel *model) {
+  // Store previous occurance location in text model state
+  // Restore prev loc or find first occurance
+  // Move cursor to next occurance
+  // If no next occurance don't move and beep
+
+  int start_loc = model->getX();
+
+  // Restore prev found loc and target char
+  if (to_find == '\0') {
+    to_find = model->state_str["cmd_f_prev_char"][0];
+    // Move one past previous loc found, to find next
+    start_loc = model->state_int["cmd_f_prev_loc"] + 1;
+  }
+
+  string ln = model->getLines()->at(model->getY());
+  // Find first occruance past cur x
+  size_t pos = ln.find(to_find, start_loc);
+  // If not found stay at cur pos
+  if (string::npos == pos) {
+    pos = model->getX();
+    beep();
+  }
+  model->setX(pos);
+  // Store state for location where found and target char
+  model->state_str["cmd_f_prev_char"] = to_find;
+  model->state_int["cmd_f_prev_loc"] = pos;
 }

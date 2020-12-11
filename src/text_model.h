@@ -2,6 +2,7 @@
 #define TEXT_MODEL_H
 
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -50,6 +51,8 @@ class TextModel {
 
   std::string get_cmd_so_far();
   void set_cmd_so_far(std::string cmd);
+  void save_state_data(std::string key, std::string data);
+  void save_state_data(std::string key, int data);
 
   const std::shared_ptr<std::vector<std::string>> getLines();
   void writeChar(char c, int x, int y);
@@ -62,6 +65,11 @@ class TextModel {
   void setY(int y);
   int getX();
   int getY();
+
+  // Arbitrary state data for commands
+  // TODO: getter setters
+  std::map<std::string, std::string> state_str;
+  std::map<std::string, int> state_int;
 };
 
 #endif

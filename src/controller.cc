@@ -29,13 +29,22 @@ unique_ptr<CmdBase> Controller::parse_input() {
         cur_cmd == "o" || cur_cmd == "O") {
       cmd = make_unique<CmdInsert>(c);
     }
-    if (cur_cmd == "e" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^") {
+    if (cur_cmd == "e" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^" ||
+        cur_cmd == "$") {
       cmd = make_unique<CmdJump>(c);
     }
 
     // Handle single character movement commands
     if (cur_cmd == "h" || cur_cmd == "j" || cur_cmd == "k" || cur_cmd == "l")
       cmd = make_unique<CmdMove>(c);
+
+    // Search
+    if (cur_cmd.size() > 1 && cur_cmd[0] == 'f') {
+      cmd = make_unique<Cmdf>(c);
+    }
+    if (cur_cmd == ";") {
+      cmd = make_unique<Cmdf>('\0');
+    }
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
