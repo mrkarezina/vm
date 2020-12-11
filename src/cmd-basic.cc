@@ -1,5 +1,7 @@
 #include "cmd-basic.h"
 
+using namespace std;
+
 CmdWrite::CmdWrite(char c) : toWrite{c} {}
 
 void CmdWrite::exec(TextModel *model) {
@@ -63,20 +65,29 @@ void CmdInsert::exec(TextModel *model) {
   switch (insert_type) {
     case 'a':
       model->setX(model->getX() + 1);
-      model->toggle_mode();
       break;
     case 'A':
       model->setX(model->getLines()->at(model->getY()).size());
-      model->toggle_mode();
       break;
     case 'i':
-      model->toggle_mode();
       break;
     case 'I':
       model->setX(0);
-      model->toggle_mode();
+      break;
+    case 'o':
+      model->new_line(0, model->getY() + 1);
+      model->setY(model->getY() + 1);
+      break;
+    case 'O':
+      model->new_line(0, model->getY());
+      model->setY(model->getY());
+      break;
+    default:
+      throw invalid_argument("Unrecognized insert_type: " +
+                             to_string(insert_type));
       break;
   }
+  model->toggle_mode();
 }
 
 CmdMove::CmdMove(char c) : move{c} {}
@@ -93,9 +104,6 @@ void CmdMove::exec(TextModel *model) {
   }
 
   if (move == 'l') {
-    // if(x==0) {
-    //   std::cout << "SIZE: " << model->getLines()->at(y).size() << std::endl;
-    // }
     if (x + 1 < model->getLines()->at(y).size())
       model->setX(x + 1);
     else
@@ -127,4 +135,31 @@ void CmdSaveExit::exec(TextModel *model) {
   model->save_lines();
   model->set_render_loop_off();
   // That's all folks
+}
+
+CmdJump::CmdJump(char c) : jump_type{c} {}
+
+void CmdJump::exec(TextModel *model) {
+  switch (jump_type) {
+    case '0':
+      model->setX(0);
+      break;
+    case '^': {
+      // If no non-whitespace characters found move to end of line
+      string ln = model->getLines()->at(model->getY());
+      size_t first = ln.find_first_not_of(' ');
+      size_t ln_size = ln.size();
+      ln_size = ln_size == 0 ? 0 : ln_size - 1;
+      model->setX(first == string::npos ? ln_size : first);
+      break;
+    }
+    // TODO
+    case 'b':
+    case 'e': {
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized jump_type: " + to_string(jump_type));
+      break;
+  }
 }

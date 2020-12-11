@@ -25,8 +25,12 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
   // Command mode
   if (!model->is_write_mode()) {
-    if (cur_cmd == "i" || cur_cmd == "a" || cur_cmd == "I" || cur_cmd == "A") {
+    if (cur_cmd == "i" || cur_cmd == "a" || cur_cmd == "I" || cur_cmd == "A" ||
+        cur_cmd == "o" || cur_cmd == "O") {
       cmd = make_unique<CmdInsert>(c);
+    }
+    if (cur_cmd == "e" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^") {
+      cmd = make_unique<CmdJump>(c);
     }
 
     // Handle single character movement commands

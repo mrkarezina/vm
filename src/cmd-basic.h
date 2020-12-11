@@ -1,6 +1,8 @@
 #ifndef CMD_BASIC_H
 #define CMD_BASIC_H
 
+#include <stdexcept>
+
 #include "cmd-base.h"
 
 class CmdWrite : public CmdBase {
@@ -22,7 +24,7 @@ class CmdEsc : public CmdBase {
 };
 
 /**
- * Handles i, a, I, A
+ * Handles i, I, a, A, o, O
  */
 class CmdInsert : public CmdBase {
   char insert_type;
@@ -37,6 +39,9 @@ class CmdEnter : public CmdBase {
   void exec(TextModel *model);
 };
 
+/**
+ * Supports h, j, k, l
+ */
 class CmdMove : public CmdBase {
   char move;
 
@@ -52,6 +57,17 @@ class CmdStall : public CmdBase {
 
 class CmdSaveExit : public CmdBase {
  public:
+  void exec(TextModel *model);
+};
+
+/**
+ * Supports e, b, 0, ^
+ */
+class CmdJump : public CmdBase {
+  char jump_type;
+
+ public:
+  CmdJump(char c);
   void exec(TextModel *model);
 };
 
