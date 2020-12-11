@@ -5,6 +5,11 @@
 
 #include "cmd-base.h"
 
+struct posn {
+  int x;
+  int y;
+};
+
 class CmdWrite : public CmdBase {
   char toWrite;
 
@@ -13,7 +18,7 @@ class CmdWrite : public CmdBase {
   void exec(TextModel *model);
 };
 
-class CmdDel : public CmdBase {
+class CmdBackspace : public CmdBase {
  public:
   void exec(TextModel *model);
 };
@@ -60,16 +65,6 @@ class CmdSaveExit : public CmdBase {
   void exec(TextModel *model);
 };
 
-/**
- * Supports e, b, 0, ^, $
- */
-class CmdJump : public CmdBase {
-  char jump_type;
-
- public:
-  CmdJump(char c);
-  void exec(TextModel *model);
-};
 
 /**
  * Supports f[some char] command.
@@ -99,6 +94,17 @@ class CmdsS : public CmdBase {
 };
 
 /**
+ * Supports e, b, 0, ^, $
+ */
+class CmdJump : public CmdBase {
+  char jump_type;
+
+ public:
+  CmdJump(char c);
+  void exec(TextModel *model);
+};
+
+/**
  * Change replace commands
  * c[any motion], cc
  */
@@ -109,5 +115,18 @@ class CmdcC : public CmdBase {
   CmdcC(char c);
   void exec(TextModel *model);
 };
+
+/**
+ * Deletion commands
+ * d[any motion], dd, x
+ */
+class CmddD : public CmdBase {
+  char del_type;
+
+ public:
+  CmddD(char c);
+  void exec(TextModel *model);
+};
+
 
 #endif

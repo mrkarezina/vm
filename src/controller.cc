@@ -29,7 +29,7 @@ unique_ptr<CmdBase> Controller::parse_input() {
         cur_cmd == "o" || cur_cmd == "O") {
       cmd = make_unique<CmdInsert>(c);
     }
-    if (cur_cmd == "e" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^" ||
+    if (cur_cmd == "w" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^" ||
         cur_cmd == "$") {
       cmd = make_unique<CmdJump>(c);
     }
@@ -59,7 +59,7 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
   // Command / write mode sensitive commands
   if (c == 10) cmd = make_unique<CmdEnter>();
-  if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdDel>();
+  if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdBackspace>();
   if (c == 27 && model->is_write_mode()) cmd = make_unique<CmdEsc>();
 
   // Any character written in write mode

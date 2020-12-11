@@ -27,7 +27,7 @@ void CmdEnter::exec(TextModel *model) {
   }
 }
 
-void CmdDel::exec(TextModel *model) {
+void CmdBackspace::exec(TextModel *model) {
   int x = model->getX();
   int y = model->getY();
   if (x > 0 || y > 0) {
@@ -137,36 +137,6 @@ void CmdSaveExit::exec(TextModel *model) {
   // That's all folks
 }
 
-CmdJump::CmdJump(char c) : jump_type{c} {}
-
-void CmdJump::exec(TextModel *model) {
-  string ln = model->getLines()->at(model->getY());
-  size_t ln_size = ln.size();
-
-  switch (jump_type) {
-    case '0':
-      model->setX(0);
-      break;
-    case '^': {
-      // If no non-whitespace characters found move to end of line
-      size_t first = ln.find_first_not_of(' ');
-      ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->setX(first == string::npos ? ln_size : first);
-      break;
-    }
-    case '$': {
-      ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->setX(ln_size);
-      break;
-    }
-    // TODO
-    case 'b':
-    default:
-      throw invalid_argument("Unrecognized jump_type: " + to_string(jump_type));
-      break;
-  }
-}
-
 Cmdf::Cmdf(char c) : to_find{c} {}
 
 void Cmdf::exec(TextModel *model) {
@@ -216,6 +186,78 @@ void CmdsS::exec(TextModel *model) {
   model->toggle_mode();
 }
 
+CmdJump::CmdJump(char c) : jump_type{c} {}
+
+// Returns posn of start of next word
+posn start_next_word(TextModel *model) {
+  // Begining of next word
+  // If non left on line, start begining of next line
+  string ln = model->get_line_at();
+  size_t first = ln.find(' ', model->getX());
+  if (first == string::npos) {
+    if (model->getY() < model->getLines()->size() - 1) {
+      return posn{0, model->getY() + 1};
+    } else {
+      return posn{0, model->getY()};
+    }
+  }
+  return posn{(int)first + 1, model->getY()};
+}
+
+// Returns posn of start of prev word
+posn start_prev_word(TextModel *model) {
+  string ln = model->get_line_at();
+  size_t first = ln.rfind(' ', model->getX() - 2);
+  if (first == string::npos) {
+    if (0 < model->getY()) {
+      // New posn is end of previous line
+      return posn{(int)model->get_line_at(model->getY() - 1).size(),
+                  model->getY() - 1};
+    } else {
+      return posn{0, model->getY()};
+    }
+  }
+  return posn{(int)first + 1, model->getY()};
+}
+
+void CmdJump::exec(TextModel *model) {
+  string ln = model->getLines()->at(model->getY());
+  size_t ln_size = ln.size();
+
+  switch (jump_type) {
+    case '0':
+      model->setX(0);
+      break;
+    case '^': {
+      // If no non-whitespace characters found move to end of line
+      size_t first = ln.find_first_not_of(' ');
+      ln_size = ln_size == 0 ? 0 : ln_size - 1;
+      model->setX(first == string::npos ? ln_size : first);
+      break;
+    }
+    case '$': {
+      ln_size = ln_size == 0 ? 0 : ln_size - 1;
+      model->setX(ln_size);
+      break;
+    }
+    case 'b': {
+      posn new_posn = start_prev_word(model);
+      model->setX(new_posn.x);
+      model->setY(new_posn.y);
+      break;
+    }
+    case 'w': {
+      posn new_posn = start_next_word(model);
+      model->setX(new_posn.x);
+      model->setY(new_posn.y);
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized jump_type: " + to_string(jump_type));
+      break;
+  }
+}
+
 CmdcC::CmdcC(char c) : change_type{c} {}
 
 void CmdcC::exec(TextModel *model) {
@@ -251,4 +293,39 @@ void CmdcC::exec(TextModel *model) {
       break;
   }
   model->toggle_mode();
+}
+
+CmddD::CmddD(char c) : del_type{c} {}
+
+void CmddD::exec(TextModel *model) {
+  switch (del_type) {
+    case '$': {
+      break;
+    }
+    case 'd': {
+      // Delete line and move cusor to next line
+      model->delete_line(0, model->getY(), false);
+      break;
+    }
+    case 'w': {
+      string ln = model->get_line_at();
+      size_t first = ln.find_first_of(' ', model->getX());
+      if (first == string::npos) {
+        // Clear from cur posn to end of line
+        model->set_line_at(ln.substr(0, model->getX()));
+      } else {
+        // Replace from cur posn to end of word
+        model->set_line_at(
+            ln.replace(model->getX(), first - model->getX(), ""));
+      }
+    }
+    case 'x': {
+      // If empty should not do anything
+      model->delete_char(model->getX() + 1, model->getY());
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized del_type: " + to_string(del_type));
+      break;
+  }
 }
