@@ -13,24 +13,24 @@ unique_ptr<CmdBase> Controller::parse_input() {
   int c = getch();
   unique_ptr<CmdBase> cmd = nullptr;
 
-  string prev_cmd = model->get_cmd_so_far();
-  prev_cmd += c;
+  string cur_cmd = model->get_cmd_so_far();
+  cur_cmd += c;
 
   // TODO: Colon commands to support
   // :w :q :wq :q! :r :0 :$ :line-number
-  if (prev_cmd == ":wq") cmd = make_unique<CmdSaveExit>();
+  if (cur_cmd == ":wq") cmd = make_unique<CmdSaveExit>();
 
   // TODO: / and ? commands
   // Search forward and backward
 
   // Command mode
   if (!model->is_write_mode()) {
-    if (c == 'i') {
-      model->toggle_mode();
-      cmd = make_unique<CmdStall>();
+    if (cur_cmd == "i" || cur_cmd == "a" || cur_cmd == "I" || cur_cmd == "A") {
+      cmd = make_unique<CmdInsert>(c);
     }
+
     // Handle single character movement commands
-    if (c == 'h' || c == 'j' || c == 'k' || c == 'l')
+    if (cur_cmd == "h" || cur_cmd == "j" || cur_cmd == "k" || cur_cmd == "l")
       cmd = make_unique<CmdMove>(c);
   }
 
@@ -50,7 +50,7 @@ unique_ptr<CmdBase> Controller::parse_input() {
   if (cmd == nullptr) {
     // Stall if command incomplete
     cmd = make_unique<CmdStall>();
-    model->set_cmd_so_far(prev_cmd);
+    model->set_cmd_so_far(cur_cmd);
   } else {
     // Reset if command was matched
     model->set_cmd_so_far("");

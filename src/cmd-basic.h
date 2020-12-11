@@ -21,6 +21,17 @@ class CmdEsc : public CmdBase {
   void exec(TextModel *model);
 };
 
+/**
+ * Handles i, a, I, A
+ */
+class CmdInsert : public CmdBase {
+  char insert_type;
+
+ public:
+  CmdInsert(char c);
+  void exec(TextModel *model);
+};
+
 class CmdEnter : public CmdBase {
  public:
   void exec(TextModel *model);
@@ -28,6 +39,7 @@ class CmdEnter : public CmdBase {
 
 class CmdMove : public CmdBase {
   char move;
+
  public:
   CmdMove(char c);
   void exec(TextModel *model);

@@ -57,6 +57,28 @@ void CmdDel::exec(TextModel *model) {
 
 void CmdEsc::exec(TextModel *model) { model->toggle_mode(); }
 
+CmdInsert::CmdInsert(char c) : insert_type{c} {}
+
+void CmdInsert::exec(TextModel *model) {
+  switch (insert_type) {
+    case 'a':
+      model->setX(model->getX() + 1);
+      model->toggle_mode();
+      break;
+    case 'A':
+      model->setX(model->getLines()->at(model->getY()).size());
+      model->toggle_mode();
+      break;
+    case 'i':
+      model->toggle_mode();
+      break;
+    case 'I':
+      model->setX(0);
+      model->toggle_mode();
+      break;
+  }
+}
+
 CmdMove::CmdMove(char c) : move{c} {}
 
 void CmdMove::exec(TextModel *model) {
