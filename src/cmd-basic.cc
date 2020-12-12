@@ -80,12 +80,15 @@ void CmdInsert::exec(TextModel *model) {
       model->setX(0);
       break;
     case 'o':
-      model->new_line(0, model->getY() + 1);
+      model->new_line(model->getLines()->at(model->getY()).size(),
+                      model->getY());
       model->setY(model->getY() + 1);
+      model->setX(0);
       break;
     case 'O':
       model->new_line(0, model->getY());
       model->setY(model->getY());
+      model->setX(0);
       break;
     default:
       throw invalid_argument("Unrecognized insert_type: " +
