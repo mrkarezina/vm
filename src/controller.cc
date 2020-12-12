@@ -16,10 +16,6 @@ unique_ptr<CmdBase> Controller::parse_input() {
   string cur_cmd = model->get_cmd_so_far();
   cur_cmd += c;
 
-  // TODO: Colon commands to support
-  // :w :q :wq :q! :r :0 :$ :line-number
-  if (cur_cmd == ":wq") cmd = make_unique<CmdSaveExit>();
-
   // TODO: / and ? commands
   // Search forward and backward
 
@@ -72,6 +68,17 @@ unique_ptr<CmdBase> Controller::parse_input() {
                                         cur_cmd.substr(1, cur_cmd.size() - 2));
 
     if (cur_cmd == "n" || cur_cmd == "N") cmd = make_unique<CmdSearchNav>(c);
+
+    if (cur_cmd.substr(0, 2) == ":q" && c == 10) cmd = make_unique<CmdQuit>();
+    if (cur_cmd.substr(0, 2) == ":w" && c == 10)
+      cmd = make_unique<CmdSaveLines>();
+    if (cur_cmd.substr(0, 3) == ":q!" && c == 10) cmd = make_unique<CmdQuit>();
+    // TODO: Colon commands to support
+    // :w :q :wq :q! :r :0 :$ :line-number
+    if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
+      cmd = make_unique<CmdSaveExit>();
+
+    // r command
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
