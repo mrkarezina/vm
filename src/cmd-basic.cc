@@ -5,51 +5,51 @@ using namespace std;
 CmdWrite::CmdWrite(char c) : toWrite{c} {}
 
 void CmdWrite::exec(TextModel *model) {
-  int x = model->getX();
-  int y = model->getY();
-  if (model->is_write_mode()) model->addChar(toWrite, x, y);
-  model->setX(x + 1);
+  int x = model->get_x();
+  int y = model->get_y();
+  if (model->is_write_mode()) model->add_char(toWrite, x, y);
+  model->set_x(x + 1);
 }
 
 void CmdEnter::exec(TextModel *model) {
-  int x = model->getX();
-  int y = model->getY();
+  int x = model->get_x();
+  int y = model->get_y();
   if (model->is_write_mode()) {
     model->new_line(x, y);
-    model->setX(0);
-    model->setY(y + 1);
+    model->set_x(0);
+    model->set_y(y + 1);
   } else {
-    if (y < model->getLines()->size() - 1) {
-      model->setX(0);
-      model->setY(y + 1);
+    if (y < model->get_lines()->size() - 1) {
+      model->set_x(0);
+      model->set_y(y + 1);
     } else
       beep();
   }
 }
 
 void CmdBackspace::exec(TextModel *model) {
-  int x = model->getX();
-  int y = model->getY();
+  int x = model->get_x();
+  int y = model->get_y();
   if (x > 0 || y > 0) {
     if (model->is_write_mode()) {
       if (x == 0) {
         // Set x to length of prev line
-        int new_x = model->getLines()->at(y - 1).size();
+        int new_x = model->get_lines()->at(y - 1).size();
         model->delete_line(x, y, true);
-        model->setX(new_x);
-        model->setY(y - 1);
+        model->set_x(new_x);
+        model->set_y(y - 1);
       } else {
         model->delete_char(x, y);
-        model->setX(x - 1);
+        model->set_x(x - 1);
       }
     } else {
       if (x == 0) {
         // Move to end and up
-        int new_x = model->getLines()->at(y - 1).size();
-        model->setX(new_x == 0 ? new_x : new_x - 1);
-        model->setY(y - 1);
+        int new_x = model->get_lines()->at(y - 1).size();
+        model->set_x(new_x == 0 ? new_x : new_x - 1);
+        model->set_y(y - 1);
       } else {
-        model->setX(x - 1);
+        model->set_x(x - 1);
       }
     }
   } else {
@@ -69,26 +69,26 @@ CmdInsert::CmdInsert(char c) : insert_type{c} {}
 void CmdInsert::exec(TextModel *model) {
   switch (insert_type) {
     case 'a':
-      model->setX(model->getX() + 1);
+      model->set_x(model->get_x() + 1);
       break;
     case 'A':
-      model->setX(model->getLines()->at(model->getY()).size());
+      model->set_x(model->get_lines()->at(model->get_y()).size());
       break;
     case 'i':
       break;
     case 'I':
-      model->setX(0);
+      model->set_x(0);
       break;
     case 'o':
-      model->new_line(model->getLines()->at(model->getY()).size(),
-                      model->getY());
-      model->setY(model->getY() + 1);
-      model->setX(0);
+      model->new_line(model->get_lines()->at(model->get_y()).size(),
+                      model->get_y());
+      model->set_y(model->get_y() + 1);
+      model->set_x(0);
       break;
     case 'O':
-      model->new_line(0, model->getY());
-      model->setY(model->getY());
-      model->setX(0);
+      model->new_line(0, model->get_y());
+      model->set_y(model->get_y());
+      model->set_x(0);
       break;
     default:
       throw invalid_argument("Unrecognized insert_type: " +
@@ -101,37 +101,37 @@ void CmdInsert::exec(TextModel *model) {
 CmdMove::CmdMove(char c) : move{c} {}
 
 void CmdMove::exec(TextModel *model) {
-  int x = model->getX();
-  int y = model->getY();
+  int x = model->get_x();
+  int y = model->get_y();
 
   if (move == 'h') {
     if (x > 0)
-      model->setX(x - 1);
+      model->set_x(x - 1);
     else
       beep();
   }
 
   if (move == 'l') {
-    if (x + 1 < model->getLines()->at(y).size())
-      model->setX(x + 1);
+    if (x + 1 < model->get_lines()->at(y).size())
+      model->set_x(x + 1);
     else
       beep();
   }
   // Up
   if (move == 'k') {
     if (y > 0) {
-      model->setY(y - 1);
-      int new_x = model->getLines()->at(y - 1).size();
-      if (x >= new_x) model->setX(new_x == 0 ? new_x : new_x - 1);
+      model->set_y(y - 1);
+      int new_x = model->get_lines()->at(y - 1).size();
+      if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
     } else
       beep();
   }
   // Down
   if (move == 'j') {
-    if (y < model->getLines()->size() - 1) {
-      model->setY(y + 1);
-      int new_x = model->getLines()->at(y + 1).size();
-      if (x >= new_x) model->setX(new_x == 0 ? new_x : new_x - 1);
+    if (y < model->get_lines()->size() - 1) {
+      model->set_y(y + 1);
+      int new_x = model->get_lines()->at(y + 1).size();
+      if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
     } else
       beep();
   }
@@ -162,14 +162,14 @@ CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}
 
 void CmdLineSelection::exec(TextModel *model) {
   if (selection == "0") {
-    model->setY(0);
+    model->set_y(0);
   } else if (selection == "$") {
-    model->setY((int)model->getLines()->size() - 1);
+    model->set_y((int)model->get_lines()->size() - 1);
   } else {
     int line = stoi(selection);
-    model->setY(min(line, (int)model->getLines()->size() - 1));
+    model->set_y(min(line, (int)model->get_lines()->size() - 1));
   }
-  model->setX(0);
+  model->set_x(0);
 }
 
 Cmdf::Cmdf(char c) : to_find{c} {}
@@ -180,7 +180,7 @@ void Cmdf::exec(TextModel *model) {
   // Move cursor to next occurance
   // If no next occurance don't move and beep
 
-  int start_loc = model->getX();
+  int start_loc = model->get_x();
 
   // Restore prev found loc and target char
   if (to_find == '\0') {
@@ -189,15 +189,15 @@ void Cmdf::exec(TextModel *model) {
     start_loc = model->state_int["cmd_f_prev_loc"] + 1;
   }
 
-  string ln = model->getLines()->at(model->getY());
+  string ln = model->get_lines()->at(model->get_y());
   // Find first occruance past cur x
   size_t pos = ln.find(to_find, start_loc);
   // If not found stay at cur pos
   if (string::npos == pos) {
-    pos = model->getX();
+    pos = model->get_x();
     beep();
   }
-  model->setX(pos);
+  model->set_x(pos);
   // Store state for location where found and target char
   model->state_str["cmd_f_prev_char"] = to_find;
   model->state_int["cmd_f_prev_loc"] = pos;
@@ -208,11 +208,11 @@ CmdsS::CmdsS(char c) : sub_type{c} {}
 void CmdsS::exec(TextModel *model) {
   switch (sub_type) {
     case 's':
-      model->delete_char(model->getX() + 1, model->getY());
+      model->delete_char(model->get_x() + 1, model->get_y());
       break;
     case 'S':
-      model->clear_line(model->getY());
-      model->setX(0);
+      model->clear_line(model->get_y());
+      model->set_x(0);
       break;
     default:
       throw invalid_argument("Unrecognized sub_type: " + to_string(sub_type));
@@ -224,67 +224,67 @@ void CmdsS::exec(TextModel *model) {
 CmdJump::CmdJump(char c) : jump_type{c} {}
 
 // Returns posn of start of next word
-posn start_next_word(TextModel *model) {
+Posn start_next_word(TextModel *model) {
   // Begining of next word
   // If non left on line, start begining of next line
   string ln = model->get_line_at();
-  size_t first = ln.find(' ', model->getX());
+  size_t first = ln.find(' ', model->get_x());
   if (first == string::npos) {
-    if (model->getY() < model->getLines()->size() - 1) {
-      return posn{0, model->getY() + 1};
+    if (model->get_y() < model->get_lines()->size() - 1) {
+      return Posn{0, model->get_y() + 1};
     } else {
-      return posn{0, model->getY()};
+      return Posn{0, model->get_y()};
     }
   }
-  return posn{(int)first + 1, model->getY()};
+  return Posn{(int)first + 1, model->get_y()};
 }
 
 // Returns posn of start of prev word
-posn start_prev_word(TextModel *model) {
+Posn start_prev_word(TextModel *model) {
   string ln = model->get_line_at();
-  size_t first = ln.rfind(' ', model->getX() - 2);
+  size_t first = ln.rfind(' ', model->get_x() - 2);
   if (first == string::npos) {
-    if (0 < model->getY()) {
+    if (0 < model->get_y()) {
       // New posn is end of previous line
-      return posn{(int)model->get_line_at(model->getY() - 1).size(),
-                  model->getY() - 1};
+      return Posn{(int)model->get_line_at(model->get_y() - 1).size(),
+                  model->get_y() - 1};
     } else {
-      return posn{0, model->getY()};
+      return Posn{0, model->get_y()};
     }
   }
-  return posn{(int)first + 1, model->getY()};
+  return Posn{(int)first + 1, model->get_y()};
 }
 
 void CmdJump::exec(TextModel *model) {
-  string ln = model->getLines()->at(model->getY());
+  string ln = model->get_lines()->at(model->get_y());
   size_t ln_size = ln.size();
 
   switch (jump_type) {
     case '0':
-      model->setX(0);
+      model->set_x(0);
       break;
     case '^': {
       // If no non-whitespace characters found move to end of line
       size_t first = ln.find_first_not_of(' ');
       ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->setX(first == string::npos ? ln_size : first);
+      model->set_x(first == string::npos ? ln_size : first);
       break;
     }
     case '$': {
       ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->setX(ln_size);
+      model->set_x(ln_size);
       break;
     }
     case 'b': {
-      posn new_posn = start_prev_word(model);
-      model->setX(new_posn.x);
-      model->setY(new_posn.y);
+      Posn new_posn = start_prev_word(model);
+      model->set_x(new_posn.x);
+      model->set_y(new_posn.y);
       break;
     }
     case 'w': {
-      posn new_posn = start_next_word(model);
-      model->setX(new_posn.x);
-      model->setY(new_posn.y);
+      Posn new_posn = start_next_word(model);
+      model->set_x(new_posn.x);
+      model->set_y(new_posn.y);
       break;
     }
     default:
@@ -301,24 +301,24 @@ void CmdcC::exec(TextModel *model) {
   // cc, c$, cw
   switch (change_type) {
     case 'c': {
-      model->clear_line(model->getY());
-      model->setX(0);
+      model->clear_line(model->get_y());
+      model->set_x(0);
       break;
     }
     case '$': {
       // Clear past x posn
-      model->set_line_at(ln.substr(0, model->getX()));
+      model->set_line_at(ln.substr(0, model->get_x()));
       break;
     }
     case 'w': {
-      size_t first = ln.find_first_of(' ', model->getX());
+      size_t first = ln.find_first_of(' ', model->get_x());
       if (first == string::npos) {
         // Clear from cur posn to end of line
-        model->set_line_at(ln.substr(0, model->getX()));
+        model->set_line_at(ln.substr(0, model->get_x()));
       } else {
         // Replace from cur posn to end of word
         model->set_line_at(
-            ln.replace(model->getX(), first - model->getX(), ""));
+            ln.replace(model->get_x(), first - model->get_x(), ""));
       }
       break;
     }
@@ -336,33 +336,33 @@ void CmddD::exec(TextModel *model) {
   switch (del_type) {
     case '$': {
       string ln = model->get_line_at();
-      model->set_line_at(ln.substr(0, model->getX()));
-      if (model->getX() > 0) model->setX(model->getX() - 1);
+      model->set_line_at(ln.substr(0, model->get_x()));
+      if (model->get_x() > 0) model->set_x(model->get_x() - 1);
       break;
     }
     case 'd': {
       // Delete line and move cusor to next line
-      model->delete_line(0, model->getY(), false);
-      model->setX(0);
+      model->delete_line(0, model->get_y(), false);
+      model->set_x(0);
       break;
     }
     case 'w': {
       string ln = model->get_line_at();
-      size_t first = ln.find_first_of(' ', model->getX());
+      size_t first = ln.find_first_of(' ', model->get_x());
       if (first == string::npos) {
         // Clear from cur posn to end of line
-        model->set_line_at(ln.substr(0, model->getX()));
+        model->set_line_at(ln.substr(0, model->get_x()));
       } else {
         // Replace from cur posn to end of word
         model->set_line_at(
-            ln.replace(model->getX(), first - model->getX(), ""));
+            ln.replace(model->get_x(), first - model->get_x(), ""));
       }
     }
     case 'x': {
-      model->delete_char(model->getX() + 1, model->getY());
+      model->delete_char(model->get_x() + 1, model->get_y());
       // If cursor deleted last char in line, shift cursor back
-      if (model->getX() == model->get_line_at().size() && model->getX() > 0)
-        model->setX(model->getX() - 1);
+      if (model->get_x() == model->get_line_at().size() && model->get_x() > 0)
+        model->set_x(model->get_x() - 1);
       break;
     }
     default:
@@ -392,8 +392,8 @@ void CmdPaste::exec(TextModel *model) {
   switch (paste_type) {
     case 'p': {
       // Paste below cur line
-      model->new_line(model->get_line_at().size(), model->getY());
-      model->setY(model->getY() + 1);
+      model->new_line(model->get_line_at().size(), model->get_y());
+      model->set_y(model->get_y() + 1);
       try {
         model->set_line_at(model->state_str["copied_data"]);
       } catch (std::out_of_range const e) {
@@ -402,7 +402,7 @@ void CmdPaste::exec(TextModel *model) {
     }
     case 'P': {
       // Paste above cur line
-      model->new_line(0, model->getY());
+      model->new_line(0, model->get_y());
       try {
         model->set_line_at(model->state_str["copied_data"]);
       } catch (std::out_of_range const e) {
@@ -414,11 +414,11 @@ void CmdPaste::exec(TextModel *model) {
                              to_string(paste_type));
       break;
   }
-  model->setX(0);
+  model->set_x(0);
 }
 
-posn CmdSearchBase::find_next_occurance(TextModel *model, std::string query,
-                                        posn start_pos) {
+Posn CmdSearchBase::find_next_occurance(TextModel *model, std::string query,
+                                        Posn start_pos) {
   int cur_y = start_pos.y;
   int cur_x = start_pos.x;
   string ln = model->get_line_at(start_pos.y);
@@ -426,17 +426,17 @@ posn CmdSearchBase::find_next_occurance(TextModel *model, std::string query,
   cur_x = 0;
   while (pos == string::npos) {
     cur_y += 1;
-    if (cur_y == model->getLines()->size()) cur_y = 0;
+    if (cur_y == model->get_lines()->size()) cur_y = 0;
     ln = model->get_line_at(cur_y);
     pos = ln.find(query, cur_x);
     // Not found if entire text has been searched (looped back to start)
-    if (cur_y == start_pos.y && pos == string::npos) return posn{-1, -1};
+    if (cur_y == start_pos.y && pos == string::npos) return Posn{-1, -1};
   }
-  return posn{(int)pos, cur_y};
+  return Posn{(int)pos, cur_y};
 }
 
-posn CmdSearchBase::find_prev_occurance(TextModel *model, std::string query,
-                                        posn start_pos) {
+Posn CmdSearchBase::find_prev_occurance(TextModel *model, std::string query,
+                                        Posn start_pos) {
   int cur_y = start_pos.y;
   int cur_x = start_pos.x;
   string ln = model->get_line_at(cur_y);
@@ -446,14 +446,14 @@ posn CmdSearchBase::find_prev_occurance(TextModel *model, std::string query,
   if (cur_x == 0) pos = string::npos;
   while (pos == string::npos) {
     cur_y -= 1;
-    if (cur_y < 0) cur_y = model->getLines()->size() - 1;
+    if (cur_y < 0) cur_y = model->get_lines()->size() - 1;
     ln = model->get_line_at(cur_y);
     cur_x = ln.size();
     pos = ln.rfind(query, cur_x);
     // Not found if entire text has been searched
-    if (cur_y == start_pos.y && pos == string::npos) return posn{-1, -1};
+    if (cur_y == start_pos.y && pos == string::npos) return Posn{-1, -1};
   }
-  return posn{(int)pos, cur_y};
+  return Posn{(int)pos, cur_y};
 }
 
 CmdSearchStart::CmdSearchStart(char search_type, std::string query)
@@ -469,22 +469,22 @@ void CmdSearchStart::exec(TextModel *model) {
   model->state_str["cmd_search_query"] = query;
 
   // Move cursor to begining of occurance of
-  posn new_pos;
+  Posn new_pos;
   if (search_type == '/')
     new_pos =
-        find_next_occurance(model, query, posn{model->getX(), model->getY()});
+        find_next_occurance(model, query, Posn{model->get_x(), model->get_y()});
   else
     new_pos =
-        find_prev_occurance(model, query, posn{model->getX(), model->getY()});
+        find_prev_occurance(model, query, Posn{model->get_x(), model->get_y()});
   if (new_pos.x != -1) {
-    model->setX(new_pos.x);
-    model->setY(new_pos.y);
+    model->set_x(new_pos.x);
+    model->set_y(new_pos.y);
   } else {
     beep();
   }
 
-  model->state_int["cmd_search_prev_x"] = model->getX();
-  model->state_int["cmd_search_prev_y"] = model->getY();
+  model->state_int["cmd_search_prev_x"] = model->get_x();
+  model->state_int["cmd_search_prev_y"] = model->get_y();
 }
 
 CmdSearchNav::CmdSearchNav(char c) : nav_type{c} {}
@@ -497,19 +497,19 @@ void CmdSearchNav::exec(TextModel *model) {
     int x = model->state_int["cmd_search_prev_x"];
     int y = model->state_int["cmd_search_prev_y"];
 
-    posn new_pos;
+    Posn new_pos;
     if ((is_forward_search && nav_type == 'n') ||
         (!is_forward_search && nav_type == 'N')) {
-      new_pos = find_next_occurance(model, query, posn{x + 1, y});
+      new_pos = find_next_occurance(model, query, Posn{x + 1, y});
     }
     if ((!is_forward_search && nav_type == 'n') ||
         (is_forward_search && nav_type == 'N')) {
-      new_pos = find_prev_occurance(model, query, posn{x != 0 ? x - 1 : 0, y});
+      new_pos = find_prev_occurance(model, query, Posn{x != 0 ? x - 1 : 0, y});
     }
     model->state_int["cmd_search_prev_x"] = new_pos.x;
     model->state_int["cmd_search_prev_y"] = new_pos.y;
-    model->setX(new_pos.x);
-    model->setY(new_pos.y);
+    model->set_x(new_pos.x);
+    model->set_y(new_pos.y);
   } catch (std::out_of_range const e) {
     // If no search query provided
     beep();

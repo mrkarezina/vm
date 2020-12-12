@@ -10,23 +10,17 @@
 #include "cmd-base.h"
 #include "controller.h"
 #include "file_util.h"
+#include "posn.h"
 #include "view-base.h"
 
 class ViewBase;
 class CmdBase;
 class Controller;
 
-// TODO: view should caculate wrap (+ offest for cursor on wrapped line).
-// Cursor points to write posn in data.
-struct Cursor {
-  int x;
-  int y;
-};
-
 class TextModel {
   std::shared_ptr<std::vector<std::string>> lines;
   std::vector<std::unique_ptr<ViewBase>> views;
-  Cursor cur_posn{0, 0};
+  Posn cursor_posn{0, 0};
   std::unique_ptr<Controller> controller;
   std::string filename;
   bool render_loop_on = true;
@@ -38,7 +32,7 @@ class TextModel {
   ~TextModel();
   void run();
 
-  void addView(std::unique_ptr<ViewBase> view);
+  void add_view(std::unique_ptr<ViewBase> view);
   void render();
 
   void apply(std::unique_ptr<CmdBase> cmd);
@@ -54,21 +48,21 @@ class TextModel {
   void save_state_data(std::string key, std::string data);
   void save_state_data(std::string key, int data);
 
-  const std::shared_ptr<std::vector<std::string>> getLines();
+  const std::shared_ptr<std::vector<std::string>> get_lines();
   // Defaults to current cursor y position
   std::string get_line_at(int y = -1);
   void set_line_at(std::string s, int y = -1);
-  void writeChar(char c, int x, int y);
-  void addChar(char c, int x, int y);
+  void write_char(char c, int x, int y);
+  void add_char(char c, int x, int y);
   void new_line(int x, int y);
   void delete_char(int x, int y);
   void delete_line(int x, int y, bool concat);
   void clear_line(int y);
 
-  void setX(int x);
-  void setY(int y);
-  int getX();
-  int getY();
+  void set_x(int x);
+  void set_y(int y);
+  int get_x();
+  int get_y();
 
   // Arbitrary state data for commands
   // TODO: getter setters

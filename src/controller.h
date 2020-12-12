@@ -7,6 +7,8 @@
 
 #include "cmd-base.h"
 #include "cmd-basic.h"
+#include "cmd-motion.h"
+#include "cmd-search.h"
 #include "ncurses.h"
 #include "text_model.h"
 

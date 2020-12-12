@@ -17,23 +17,23 @@ int ceil_div(int x, int y) { return (x + y - 1) / y; }
 
 // Add y offset from wrapping for a line
 int ViewText::get_y_offset(int ln, TextModel *model) {
-  int off = ceil_div(model->getLines()->at(ln).size(), win->getWidth());
+  int off = ceil_div(model->get_lines()->at(ln).size(), win->getWidth());
   // If line is empty, still count as 1 y-offset
   return (off == 0 ? 1 : off);
 }
 
 int ViewText::get_view_y(TextModel *model) {
   int y_offset = 0;
-  for (int i = 0; i < model->getY(); i++) {
+  for (int i = 0; i < model->get_y(); i++) {
     y_offset += get_y_offset(i, model);
   }
   // Line wrap for current line
-  y_offset += model->getX() / win->getWidth();
+  y_offset += model->get_x() / win->getWidth();
   return y_offset;
 }
 
 int ViewText::get_view_x(TextModel *model) {
-  return model->getX() % win->getWidth();
+  return model->get_x() % win->getWidth();
 }
 
 void ViewText::set_scroll_focus_y(TextModel *model) {
@@ -51,7 +51,7 @@ void ViewText::set_scroll_focus_y(TextModel *model) {
 
 void ViewText::draw(TextModel *model) {
   win->erase_w();
-  const shared_ptr<vector<string>> lines = model->getLines();
+  const shared_ptr<vector<string>> lines = model->get_lines();
 
   set_scroll_focus_y(model);
 

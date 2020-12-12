@@ -194,8 +194,8 @@ class CmdPaste : public CmdBase {
 class CmdSearchBase : public CmdBase {
  protected:
   // Returns posn{-1, -1} if string not found
-  posn find_next_occurance(TextModel *model, std::string query, posn start_pos);
-  posn find_prev_occurance(TextModel *model, std::string query, posn start_pos);
+  Posn find_next_occurance(TextModel *model, std::string query, Posn start_pos);
+  Posn find_prev_occurance(TextModel *model, std::string query, Posn start_pos);
 };
 
 /**

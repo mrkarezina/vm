@@ -14,8 +14,8 @@ void initialize_curses() {
 App::App(std::string file) {
   initialize_curses();
   text_model = make_shared<TextModel>(file);
-  text_model->addView(unique_ptr<ViewCmdBar>(new ViewCmdBar()));
-  text_model->addView(unique_ptr<ViewText>(new ViewText()));
+  text_model->add_view(unique_ptr<ViewCmdBar>(new ViewCmdBar()));
+  text_model->add_view(unique_ptr<ViewText>(new ViewText()));
 }
 
 void App::run() { text_model->run(); }

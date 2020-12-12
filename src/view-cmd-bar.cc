@@ -18,10 +18,10 @@ void ViewCmdBar::draw(TextModel *model) {
     win->write_line("\"" + model->get_file_name() + "\"", 0, 0);
   }
 
-  string y_pos = model->getLines()->at(model->getY()).size() == 0
+  string y_pos = model->get_lines()->at(model->get_y()).size() == 0
                      ? "0-1"
-                     : to_string(model->getX() + 1);
-  string pos = to_string(model->getY() + 1) + "," + y_pos;
+                     : to_string(model->get_x() + 1);
+  string pos = to_string(model->get_y() + 1) + "," + y_pos;
   win->write_line(pos, 0.75 * win->getWidth(), 0);
 
   win->refresh_w();

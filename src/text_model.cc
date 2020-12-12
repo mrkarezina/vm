@@ -38,17 +38,17 @@ string TextModel::get_cmd_so_far() { return cmd_so_far; }
 
 void TextModel::set_cmd_so_far(string cmd) { cmd_so_far = cmd; }
 
-const shared_ptr<vector<string>> TextModel::getLines() { return lines; }
+const shared_ptr<vector<string>> TextModel::get_lines() { return lines; }
 
-string TextModel::get_line_at(int y) { return lines->at(y == -1 ? getY() : y); }
+string TextModel::get_line_at(int y) { return lines->at(y == -1 ? get_y() : y); }
 
 void TextModel::set_line_at(string s, int y) {
-  lines->at(y == -1 ? getY() : y) = s;
+  lines->at(y == -1 ? get_y() : y) = s;
 }
 
-void TextModel::writeChar(char c, int x, int y) { lines->at(y)[x] = c; }
+void TextModel::write_char(char c, int x, int y) { lines->at(y)[x] = c; }
 
-void TextModel::addChar(char c, int x, int y) {
+void TextModel::add_char(char c, int x, int y) {
   while (y >= lines->size()) {
     lines->push_back("");
   }
@@ -81,15 +81,15 @@ void TextModel::clear_line(int y) { lines->at(y) = ""; }
 
 void TextModel::delete_char(int x, int y) { lines->at(y).erase(x - 1, 1); }
 
-void TextModel::setX(int x) { cur_posn.x = x; }
+void TextModel::set_x(int x) { cursor_posn.x = x; }
 
-void TextModel::setY(int y) { cur_posn.y = y; }
+void TextModel::set_y(int y) { cursor_posn.y = y; }
 
-int TextModel::getX() { return cur_posn.x; }
+int TextModel::get_x() { return cursor_posn.x; }
 
-int TextModel::getY() { return cur_posn.y; }
+int TextModel::get_y() { return cursor_posn.y; }
 
-void TextModel::addView(unique_ptr<ViewBase> view) {
+void TextModel::add_view(unique_ptr<ViewBase> view) {
   views.push_back(move(view));
 }
 

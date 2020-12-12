@@ -1,7 +1,7 @@
 #ifndef POSN_H
 #define POSN_H
 
-struct posn {
+struct Posn {
   int x;
   int y;
 };
