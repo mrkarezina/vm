@@ -65,7 +65,6 @@ class CmdSaveExit : public CmdBase {
   void exec(TextModel *model);
 };
 
-
 /**
  * Supports f[some char] command.
  *
@@ -128,5 +127,28 @@ class CmddD : public CmdBase {
   void exec(TextModel *model);
 };
 
+/**
+ * Yank commands
+ * y[any motion], yy, x
+ */
+class CmdyY : public CmdBase {
+  char yank_type;
+
+ public:
+  CmdyY(char c);
+  void exec(TextModel *model);
+};
+
+/**
+ * Paste commands
+ * p, P
+ */
+class CmdPaste : public CmdBase {
+  char paste_type;
+
+ public:
+  CmdPaste(char c);
+  void exec(TextModel *model);
+};
 
 #endif

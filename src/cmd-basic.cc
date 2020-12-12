@@ -335,3 +335,49 @@ void CmddD::exec(TextModel *model) {
       break;
   }
 }
+
+CmdyY::CmdyY(char c) : yank_type{c} {}
+
+void CmdyY::exec(TextModel *model) {
+  switch (yank_type) {
+    case 'y': {
+      // Save copied data to state
+      model->state_str["copied_data"] = model->get_line_at();
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized yank_type: " + to_string(yank_type));
+      break;
+  }
+}
+
+CmdPaste::CmdPaste(char c) : paste_type{c} {}
+
+void CmdPaste::exec(TextModel *model) {
+  switch (paste_type) {
+    case 'p': {
+      // Paste below cur line
+      model->new_line(model->get_line_at().size(), model->getY());
+      model->setY(model->getY() + 1);
+      try {
+        model->set_line_at(model->state_str["copied_data"]);
+      } catch (std::out_of_range const e) {
+      }
+      break;
+    }
+    case 'P': {
+      // Paste above cur line
+      model->new_line(0, model->getY());
+      try {
+        model->set_line_at(model->state_str["copied_data"]);
+      } catch (std::out_of_range const e) {
+      }
+      break;
+    }
+    default:
+      throw invalid_argument("Unrecognized paste_type: " +
+                             to_string(paste_type));
+      break;
+  }
+  model->setX(0);
+}
