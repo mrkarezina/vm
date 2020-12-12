@@ -158,6 +158,20 @@ CmdSaveExit::CmdSaveExit() {
   add_command(std::move(make_unique<CmdQuit>()));
 }
 
+CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}
+
+void CmdLineSelection::exec(TextModel *model) {
+  if (selection == "0") {
+    model->setY(0);
+  } else if (selection == "$") {
+    model->setY((int)model->getLines()->size() - 1);
+  } else {
+    int line = stoi(selection);
+    model->setY(min(line, (int)model->getLines()->size() - 1));
+  }
+  model->setX(0);
+}
+
 Cmdf::Cmdf(char c) : to_find{c} {}
 
 void Cmdf::exec(TextModel *model) {

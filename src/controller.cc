@@ -78,7 +78,10 @@ unique_ptr<CmdBase> Controller::parse_input() {
     if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
       cmd = make_unique<CmdSaveExit>();
 
-    // r command
+    if (cur_cmd[0] == ':' && cur_cmd.size() > 1 && c == 10)
+      // Remove the : and enter key at the back
+      cmd =
+          make_unique<CmdLineSelection>(cur_cmd.substr(1, cur_cmd.size() - 2));
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');

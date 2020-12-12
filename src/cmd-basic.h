@@ -91,6 +91,17 @@ class CmdSaveExit : public CmdMultiCommand {
 };
 
 /**
+ * Line selection commands:
+ * :0, :$, :line-number
+ */
+class CmdLineSelection : public CmdBase {
+  std::string selection;
+ public:
+  CmdLineSelection(std::string selection);
+  void exec(TextModel *model);
+};
+
+/**
  * Supports f[some char] command.
  *
  * Supports ',' find next command.
