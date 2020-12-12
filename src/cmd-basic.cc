@@ -57,7 +57,12 @@ void CmdBackspace::exec(TextModel *model) {
   }
 }
 
-void CmdEsc::exec(TextModel *model) { model->toggle_mode(); }
+void CmdEsc::exec(TextModel *model) {
+  if (model->is_write_mode())
+    model->toggle_mode();
+  else
+    model->set_cmd_so_far("");
+}
 
 CmdInsert::CmdInsert(char c) : insert_type{c} {}
 

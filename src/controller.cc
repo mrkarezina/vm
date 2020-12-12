@@ -70,7 +70,7 @@ unique_ptr<CmdBase> Controller::parse_input() {
   // Command / write mode sensitive commands
   if (c == 10) cmd = make_unique<CmdEnter>();
   if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdBackspace>();
-  if (c == 27 && model->is_write_mode()) cmd = make_unique<CmdEsc>();
+  if (c == 27) cmd = make_unique<CmdEsc>();
 
   // Any character written in write mode
   if (model->is_write_mode() && cmd == nullptr) {
