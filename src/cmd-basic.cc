@@ -139,10 +139,23 @@ void CmdMove::exec(TextModel *model) {
 
 void CmdStall::exec(TextModel *model) {}
 
-void CmdSaveExit::exec(TextModel *model) {
-  model->save_lines();
-  model->set_render_loop_off();
-  // That's all folks
+void CmdMultiCommand::add_command(std::unique_ptr<CmdBase> cmd) {
+  commands.emplace_back(std::move(cmd));
+}
+
+void CmdMultiCommand::exec(TextModel *model) {
+  for (auto &command : commands) {
+    model->apply(std::move(command));
+  }
+}
+
+void CmdSaveLines::exec(TextModel *model) { model->save_lines(); }
+
+void CmdQuit::exec(TextModel *model) { model->set_render_loop_off(); }
+
+CmdSaveExit::CmdSaveExit() {
+  add_command(std::move(make_unique<CmdSaveLines>()));
+  add_command(std::move(make_unique<CmdQuit>()));
 }
 
 Cmdf::Cmdf(char c) : to_find{c} {}

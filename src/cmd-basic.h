@@ -56,9 +56,38 @@ class CmdStall : public CmdBase {
   void exec(TextModel *model);
 };
 
-class CmdSaveExit : public CmdBase {
+/**
+ * Used to create composite commands.
+ * For example:
+ * 3j
+ * - Array of 3, j commands
+ * :wq
+ * - Array of w and q commands
+ */
+class CmdMultiCommand : public CmdBase {
+  std::vector<std::unique_ptr<CmdBase>> commands;
+
+ public:
+  void add_command(std::unique_ptr<CmdBase>);
+  void exec(TextModel *model);
+};
+
+class CmdSaveLines : public CmdBase {
  public:
   void exec(TextModel *model);
+};
+
+class CmdQuit : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
+/**
+ * Composite command of write and quit
+ */
+class CmdSaveExit : public CmdMultiCommand {
+ public:
+  CmdSaveExit();
 };
 
 /**
