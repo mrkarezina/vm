@@ -271,8 +271,8 @@ void CmdcC::exec(TextModel *model) {
       break;
     }
     case '$': {
-      model->clear_line(model->getY());
-      model->setX(0);
+      // Clear past x posn
+      model->set_line_at(ln.substr(0, model->getX()));
       break;
     }
     case 'w': {
@@ -300,11 +300,15 @@ CmddD::CmddD(char c) : del_type{c} {}
 void CmddD::exec(TextModel *model) {
   switch (del_type) {
     case '$': {
+      string ln = model->get_line_at();
+      model->set_line_at(ln.substr(0, model->getX()));
+      if (model->getX() > 0) model->setX(model->getX() - 1);
       break;
     }
     case 'd': {
       // Delete line and move cusor to next line
       model->delete_line(0, model->getY(), false);
+      model->setX(0);
       break;
     }
     case 'w': {
@@ -320,8 +324,10 @@ void CmddD::exec(TextModel *model) {
       }
     }
     case 'x': {
-      // If empty should not do anything
       model->delete_char(model->getX() + 1, model->getY());
+      // If cursor deleted last char in line, shift cursor back
+      if (model->getX() == model->get_line_at().size() && model->getX() > 0)
+        model->setX(model->getX() - 1);
       break;
     }
     default:

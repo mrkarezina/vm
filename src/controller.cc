@@ -52,6 +52,10 @@ unique_ptr<CmdBase> Controller::parse_input() {
     // Clear commands
     if (cur_cmd == "cc" || cur_cmd == "cw" || cur_cmd == "c$")
       cmd = make_unique<CmdcC>(c);
+
+    // Delete commands
+    if (cur_cmd == "d$" || cur_cmd == "dd" || cur_cmd == "dw" || cur_cmd == "x")
+      cmd = make_unique<CmddD>(c);
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
