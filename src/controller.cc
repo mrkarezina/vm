@@ -62,13 +62,23 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
     // Paste commands
     if (cur_cmd == "p" || cur_cmd == "P") cmd = make_unique<CmdPaste>(c);
+
+    // Search commands
+    // cur_cmd.substr(1, cur_cmd.size() - 2, get's _the_text_ from
+    // /_the_text_[enter acsii]
+    if ((cur_cmd[0] == '/' || cur_cmd[0] == '?') && cur_cmd.size() > 2 &&
+        c == 10)
+      cmd = make_unique<CmdSearchStart>(cur_cmd[0],
+                                        cur_cmd.substr(1, cur_cmd.size() - 2));
+
+    if (cur_cmd == "n" || cur_cmd == "N") cmd = make_unique<CmdSearchNav>(c);
   }
 
   if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
   if (c == KEY_DOWN) cmd = make_unique<CmdMove>('j');
 
   // Command / write mode sensitive commands
-  if (c == 10) cmd = make_unique<CmdEnter>();
+  if (c == 10 && cmd == nullptr) cmd = make_unique<CmdEnter>();
   if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdBackspace>();
   if (c == 27) cmd = make_unique<CmdEsc>();
 

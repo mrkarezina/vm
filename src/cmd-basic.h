@@ -4,11 +4,7 @@
 #include <stdexcept>
 
 #include "cmd-base.h"
-
-struct posn {
-  int x;
-  int y;
-};
+#include "posn.h"
 
 class CmdWrite : public CmdBase {
   char toWrite;
@@ -148,6 +144,42 @@ class CmdPaste : public CmdBase {
 
  public:
   CmdPaste(char c);
+  void exec(TextModel *model);
+};
+
+/**
+ * Base class for search commands
+ * ? / n N
+ */
+class CmdSearchBase : public CmdBase {
+ protected:
+  // Returns posn{-1, -1} if string not found
+  posn find_next_occurance(TextModel *model, std::string query, posn start_pos);
+  posn find_prev_occurance(TextModel *model, std::string query, posn start_pos);
+};
+
+/**
+ * Search
+ * ? /
+ */
+class CmdSearchStart : public CmdSearchBase {
+  char search_type;
+  std::string query;
+
+ public:
+  CmdSearchStart(char search_type, std::string query);
+  void exec(TextModel *model);
+};
+
+/**
+ * Search navigation
+ * n N
+ */
+class CmdSearchNav : public CmdSearchBase {
+  char nav_type;
+
+ public:
+  CmdSearchNav(char c);
   void exec(TextModel *model);
 };
 
