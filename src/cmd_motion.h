@@ -45,7 +45,7 @@ class CmdcC : public CmdBase {
 
 /**
  * Deletion commands
- * d[any motion], dd, x
+ * d[any motion], dd, x, X
  */
 class CmddD : public CmdBase {
   char del_type;

@@ -79,6 +79,7 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
   if (cur_cmd == "yy") return make_shared<CmdyY>('y');
   if (cur_cmd == "dd") return make_shared<CmddD>('d');
   if (cur_cmd == "x") return make_shared<CmddD>('x');
+  if (cur_cmd == "X") return make_shared<CmddD>('X');
 
   // Search
   if (cur_cmd.size() > 1 && cur_cmd[0] == 'f') {

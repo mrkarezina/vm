@@ -181,6 +181,13 @@ void CmddD::exec(TextModel *model) {
         model->set_x(model->get_x() - 1);
       break;
     }
+    case 'X': {
+      if (model->get_x() > 0) {
+        model->delete_char(model->get_x(), model->get_y());
+        model->set_x(model->get_x() - 1);
+      }
+      break;
+    }
     default:
       throw invalid_argument("Unrecognized del_type: " + to_string(del_type));
       break;
