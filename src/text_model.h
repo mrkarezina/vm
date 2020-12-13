@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "cmd-base.h"
+#include "cmd_base.h"
 #include "controller.h"
 #include "file_util.h"
 #include "posn.h"

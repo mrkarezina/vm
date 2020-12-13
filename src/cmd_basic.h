@@ -5,7 +5,7 @@
 
 #include <stdexcept>
 
-#include "cmd-base.h"
+#include "cmd_base.h"
 #include "posn.h"
 #include "text_model.h"
 
