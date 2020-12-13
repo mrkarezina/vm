@@ -45,7 +45,14 @@ class Parser {
   std::shared_ptr<CmdBase> parse_command_mode(int c);
   std::shared_ptr<CmdBase> parse_insert_mode(int c);
   std::shared_ptr<CmdBase> parse_any_mode(int c);
-  std::shared_ptr<CmdBase> parse_multiplier(int c);
+
+  /**
+   * Parses multipler from beginging of command. Will return true while
+   * multiplier digit is stilll being parsed.
+   */
+  bool parsing_multiplier(int c);
+
+  int get_multiplier();
 
   /**
    * Resets temporary state if command matched

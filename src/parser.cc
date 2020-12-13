@@ -122,29 +122,28 @@ std::shared_ptr<CmdBase> Parser::parse_any_mode(int c) {
   return nullptr;
 }
 
-std::shared_ptr<CmdBase> Parser::parse_multiplier(int c) {
+bool Parser::parsing_multiplier(int c) {
   string cur_cmd = model->get_cmd_so_far();
 
   // Possible multiplier at begining of command
-  if (!model->is_write_mode() && cur_cmd.size() == 0 && isdigit(c)) {
+  if (!model->is_write_mode() && cur_cmd.size() == 1 && isdigit(c)) {
     is_multiplier = true;
-    return make_shared<CmdStall>();
   }
-  if (is_multiplier && isdigit(c)) {
-    return make_shared<CmdStall>();
-  }
+
   // Once commands starts, parse the multipler digit
   // and remove digit from current command for other parsers to work
   if (is_multiplier && !isdigit(c)) {
     multiplier = stoi(cur_cmd.substr(0, cur_cmd.size() - 1));
     // Set command to first non digit character
-    cur_cmd = cur_cmd.substr(cur_cmd.size() - 1);
+    model->set_cmd_so_far(string{cur_cmd.back()});
+    is_multiplier = false;
   }
 
-  // If not multiplier or the end of a multiplier stop stalling
-  is_multiplier = false;
-  return nullptr;
+  // Indiciate if multiplier is currenlty being parses
+  return is_multiplier;
 }
+
+int Parser::get_multiplier() { return multiplier; }
 
 void Parser::reset() {
   stall_until_enter = false;

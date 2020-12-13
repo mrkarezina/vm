@@ -1,9 +1,19 @@
 #include "controller.h"
 
+#include "cmd_multi.h"
+
 using namespace std;
 
 Controller::Controller(TextModel *model) : model{model} {
   parser = make_unique<Parser>(model);
+}
+
+shared_ptr<CmdBase> Controller::multiply_command(shared_ptr<CmdBase> cmd) {
+  shared_ptr<CmdMultiCommand> multi = make_shared<CmdMultiCommand>();
+  for (int i = 0; i < parser->get_multiplier(); i++) {
+    multi->add_command(cmd);
+  }
+  return multi;
 }
 
 shared_ptr<CmdBase> Controller::parse_input() {
@@ -25,7 +35,9 @@ shared_ptr<CmdBase> Controller::parse_input() {
 
   // First try to parse a multiplier before any commands
   // Will stall command until multiplier parsing finished
-  cmd = parser->parse_multiplier(c);
+  if (parser->parsing_multiplier(c)) {
+    return make_unique<CmdStall>();
+  }
 
   if (cmd == nullptr && !model->is_write_mode()) {
     cmd = parser->parse_command_mode(c);
@@ -39,6 +51,9 @@ shared_ptr<CmdBase> Controller::parse_input() {
     // Stall if command incomplete
     cmd = make_unique<CmdStall>();
   } else {
+    if (parser->get_multiplier() > 0) {
+      cmd = multiply_command(cmd);
+    }
     // Reset if command was matched
     model->set_cmd_so_far("");
     parser->reset();
