@@ -25,7 +25,9 @@ class Parser {
    * Signals to ignore all other command mode commands until enter is pressed
    */
   bool stall_until_enter = false;
-  ;
+  bool is_multiplier = false;
+
+  int multiplier = 0;
 
  public:
   Parser(TextModel *model);
@@ -43,6 +45,7 @@ class Parser {
   std::unique_ptr<CmdBase> parse_command_mode(int c);
   std::unique_ptr<CmdBase> parse_insert_mode(int c);
   std::unique_ptr<CmdBase> parse_any_mode(int c);
+  std::unique_ptr<CmdBase> parse_multiplier(int c);
 
   /**
    * Resets temporary state if command matched

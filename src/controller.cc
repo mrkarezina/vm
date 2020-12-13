@@ -15,13 +15,19 @@ unique_ptr<CmdBase> Controller::parse_input() {
   cur_cmd += c;
   model->set_cmd_so_far(cur_cmd);
 
+  // TODO: parsing hiearchy matters, how to make code less brittle?
+
   // Check if numeric prefix -> cur_cmd[0] == is num
   // If numeric prefix an letter, substr numeric prefix and create int
   // Parse remaining command
   // If at end num_prefix != 0, then call gen multi command with command and
   // num_prefix
 
-  if (!model->is_write_mode()) {
+  // First try to parse a multiplier before any commands
+  // Will stall command until multiplier parsing finished
+  cmd = parser->parse_multiplier(c);
+
+  if (cmd == nullptr && !model->is_write_mode()) {
     cmd = parser->parse_command_mode(c);
   }
 

@@ -122,4 +122,32 @@ std::unique_ptr<CmdBase> Parser::parse_any_mode(int c) {
   return nullptr;
 }
 
-void Parser::reset() { stall_until_enter = false; }
+std::unique_ptr<CmdBase> Parser::parse_multiplier(int c) {
+  string cur_cmd = model->get_cmd_so_far();
+
+  // Possible multiplier at begining of command
+  if (!model->is_write_mode() && cur_cmd.size() == 0 && isdigit(c)) {
+    is_multiplier = true;
+    return make_unique<CmdStall>();
+  }
+  if (is_multiplier && isdigit(c)) {
+    return make_unique<CmdStall>();
+  }
+  // Once commands starts, parse the multipler digit
+  // and remove digit from current command for other parsers to work
+  if (is_multiplier && !isdigit(c)) {
+    multiplier = stoi(cur_cmd.substr(0, cur_cmd.size() - 1));
+    // Set command to first non digit character
+    cur_cmd = cur_cmd.substr(cur_cmd.size() - 1);
+  }
+
+  // If not multiplier or the end of a multiplier stop stalling
+  is_multiplier = false;
+  return nullptr;
+}
+
+void Parser::reset() {
+  stall_until_enter = false;
+  is_multiplier = false;
+  multiplier = 0;
+}
