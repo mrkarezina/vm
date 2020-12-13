@@ -1,4 +1,5 @@
 bin
+tests/
 objs
 .DS_store
 *.out
