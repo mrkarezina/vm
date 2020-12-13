@@ -70,7 +70,12 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
     if (cur_cmd == "n" || cur_cmd == "N") cmd = make_unique<CmdSearchNav>(c);
 
+    // Control character commands
     if (convert_ctrl(c) == 'G') cmd = make_unique<CmdCtrlG>();
+    if (convert_ctrl(c) == 'F') cmd = make_unique<CmdCtrlF>();
+    if (convert_ctrl(c) == 'B') cmd = make_unique<CmdCtrlB>();
+    if (convert_ctrl(c) == 'U') cmd = make_unique<CmdCtrlU>();
+    if (convert_ctrl(c) == 'D') cmd = make_unique<CmdCtrlD>();
 
     if (cur_cmd.substr(0, 2) == ":q" && c == 10) cmd = make_unique<CmdQuit>();
     if (cur_cmd.substr(0, 2) == ":w" && c == 10)
