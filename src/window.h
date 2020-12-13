@@ -1,9 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <string>
+#include <ncurses.h>
 
-#include "ncurses.h"
+#include <string>
 
 class Window {
  private:

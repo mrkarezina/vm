@@ -1,16 +1,15 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <ncurses.h>
+
 #include <map>
 #include <memory>
 #include <string>
 
-#include "cmd-base.h"
 #include "cmd-basic.h"
 #include "cmd-motion.h"
 #include "cmd-search.h"
-#include "ncurses.h"
-#include "text_model.h"
 
 class CmdBase;
 class TextModel;

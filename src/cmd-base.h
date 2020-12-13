@@ -1,8 +1,6 @@
 #ifndef CMD_BASE_H
 #define CMD_BASE_H
 
-#include "text_model.h"
-
 class TextModel;
 
 class CmdBase {

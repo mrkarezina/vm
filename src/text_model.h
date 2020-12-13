@@ -13,8 +13,6 @@
 #include "posn.h"
 #include "view-base.h"
 
-class ViewBase;
-class CmdBase;
 class Controller;
 
 class TextModel {

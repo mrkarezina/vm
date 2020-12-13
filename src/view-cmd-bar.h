@@ -4,11 +4,13 @@
 #include <memory>
 
 #include "view-base.h"
+#include "text_model.h"
 #include "window.h"
 
 class ViewCmdBar : public ViewBase {
  private:
-    std::unique_ptr<Window> win;
+  std::unique_ptr<Window> win;
+
  public:
   ViewCmdBar();
   void draw(TextModel *model) override;
