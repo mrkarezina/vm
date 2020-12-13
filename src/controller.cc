@@ -83,8 +83,8 @@ unique_ptr<CmdBase> Controller::parse_input() {
     if (cur_cmd.substr(0, 3) == ":q!" && c == 10) cmd = make_unique<CmdQuit>();
     // TODO: Colon commands to support
     // :w :q :wq :q! :r :0 :$ :line-number
-    // if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
-    //   cmd = make_unique<CmdSaveExit>();
+    if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
+      cmd = make_unique<CmdSaveExit>();
 
     // Line selection
     if (cur_cmd[0] == ':' && cur_cmd.size() > 1 && c == 10 && cmd == nullptr)

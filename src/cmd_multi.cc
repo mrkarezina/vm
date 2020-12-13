@@ -1,5 +1,7 @@
 #include "cmd_multi.h"
 
+#include "text_model.h"
+
 using namespace std;
 
 void CmdMultiCommand::add_command(std::unique_ptr<CmdBase> cmd) {
@@ -11,4 +13,3 @@ void CmdMultiCommand::exec(TextModel *model) {
     model->apply(std::move(command));
   }
 }
-

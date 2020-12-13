@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "cmd_base.h"
-#include "text_model.h"
+
+class TextModel;
 
 /**
  * Used to create composite commands.
