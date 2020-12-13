@@ -73,13 +73,13 @@ void TextModel::new_line(int x, int y) {
   lines->insert(lines->begin() + y + 1, right);
 }
 
-// concat=true implements backspace functionality
-// concat's deleted line to previous
-void TextModel::delete_line(int x, int y, bool concat) {
-  if (concat) {
-    string right = lines->at(y).substr(x);
-    lines->at(y - 1) = lines->at(y - 1) + right;
-  }
+void TextModel::delete_line_concat(int y) {
+  string right = lines->at(y);
+  lines->at(y - 1) = lines->at(y - 1) + right;
+  lines->erase(lines->begin() + y);
+}
+
+void TextModel::delete_line(int y) {
   lines->erase(lines->begin() + y);
 }
 

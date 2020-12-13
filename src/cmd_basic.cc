@@ -35,7 +35,7 @@ void CmdBackspace::exec(TextModel *model) {
       if (x == 0) {
         // Set x to length of prev line
         int new_x = model->get_lines()->at(y - 1).size();
-        model->delete_line(x, y, true);
+        model->delete_line(y);
         model->set_x(new_x);
         model->set_y(y - 1);
       } else {

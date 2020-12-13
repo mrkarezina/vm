@@ -60,7 +60,12 @@ class TextModel {
   void add_char(char c, int x, int y);
   void new_line(int x, int y);
   void delete_char(int x, int y);
-  void delete_line(int x, int y, bool concat);
+  /**
+   * Deletes line at 'y' and concacenates its contents to the line above.
+   * Equivilent to pressing backspace at begining of line.
+   */
+  void delete_line_concat(int y);
+  void delete_line(int y);
   void clear_line(int y);
 
   void set_x(int x);

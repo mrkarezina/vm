@@ -158,8 +158,16 @@ void CmddD::exec(TextModel *model) {
     }
     case 'd': {
       // Delete line and move cusor to next line
-      model->delete_line(0, model->get_y(), false);
+      int y = model->get_y();
+      // Don't clear if only 1 line remaining
+      if (model->get_lines()->size() == 1)
+        model->clear_line(y);
+      else
+        model->delete_line(y);
+      // If deleted last line, need to move y down
+      if (y == model->get_lines()->size() && y != 0) y -= 1;
       model->set_x(0);
+      model->set_y(y);
       break;
     }
     case 'w': {
