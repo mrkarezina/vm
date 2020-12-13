@@ -30,6 +30,10 @@ bool TextModel::is_write_mode() { return write_mode; }
 
 void TextModel::set_render_loop_off() { render_loop_on = false; }
 
+bool TextModel::is_show_file_stats() { return show_file_stats; }
+
+void TextModel::set_show_file_stats(bool show) { show_file_stats = show; }
+
 string TextModel::get_file_name() { return filename; }
 
 void TextModel::save_lines() { write_lines(filename, lines); }
@@ -40,7 +44,9 @@ void TextModel::set_cmd_so_far(string cmd) { cmd_so_far = cmd; }
 
 const shared_ptr<vector<string>> TextModel::get_lines() { return lines; }
 
-string TextModel::get_line_at(int y) { return lines->at(y == -1 ? get_y() : y); }
+string TextModel::get_line_at(int y) {
+  return lines->at(y == -1 ? get_y() : y);
+}
 
 void TextModel::set_line_at(string s, int y) {
   lines->at(y == -1 ? get_y() : y) = s;

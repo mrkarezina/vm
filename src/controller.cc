@@ -8,6 +8,10 @@ void Controller::initilize_insert_cmd_map() {}
 
 Controller::Controller(TextModel *model) : model{model} {}
 
+// Converts ^[character] to the character
+// https://en.wikipedia.org/wiki/Control_character#How_control_characters_map_to_keyboards
+int Controller::convert_ctrl(char c) { return c + 64; }
+
 unique_ptr<CmdBase> Controller::parse_input() {
   set_escdelay(0);
   int c = getch();
@@ -15,9 +19,6 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
   string cur_cmd = model->get_cmd_so_far();
   cur_cmd += c;
-
-  // TODO: / and ? commands
-  // Search forward and backward
 
   // Command mode
   if (!model->is_write_mode()) {
@@ -69,16 +70,19 @@ unique_ptr<CmdBase> Controller::parse_input() {
 
     if (cur_cmd == "n" || cur_cmd == "N") cmd = make_unique<CmdSearchNav>(c);
 
+    if (convert_ctrl(c) == 'G') cmd = make_unique<CmdCtrlG>();
+
     if (cur_cmd.substr(0, 2) == ":q" && c == 10) cmd = make_unique<CmdQuit>();
     if (cur_cmd.substr(0, 2) == ":w" && c == 10)
       cmd = make_unique<CmdSaveLines>();
     if (cur_cmd.substr(0, 3) == ":q!" && c == 10) cmd = make_unique<CmdQuit>();
     // TODO: Colon commands to support
     // :w :q :wq :q! :r :0 :$ :line-number
-    if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
-      cmd = make_unique<CmdSaveExit>();
+    // if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
+    //   cmd = make_unique<CmdSaveExit>();
 
-    if (cur_cmd[0] == ':' && cur_cmd.size() > 1 && c == 10)
+    // Line selection
+    if (cur_cmd[0] == ':' && cur_cmd.size() > 1 && c == 10 && cmd == nullptr)
       // Remove the : and enter key at the back
       cmd =
           make_unique<CmdLineSelection>(cur_cmd.substr(1, cur_cmd.size() - 2));

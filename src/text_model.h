@@ -25,6 +25,8 @@ class TextModel {
   bool write_mode;
   std::string cmd_so_far;
 
+  bool show_file_stats = false;
+
  public:
   TextModel(std::string &filename);
   ~TextModel();
@@ -35,9 +37,13 @@ class TextModel {
 
   void apply(std::unique_ptr<CmdBase> cmd);
 
-  void toggle_mode();
   void set_render_loop_off();
+  void toggle_mode();
   bool is_write_mode();
+
+  bool is_show_file_stats();
+  void set_show_file_stats(bool show);
+
   std::string get_file_name();
   void save_lines();
 

@@ -10,6 +10,7 @@
 #include "cmd_basic.h"
 #include "cmd_fileio.h"
 #include "cmd_motion.h"
+#include "cmd_page_nav.h"
 #include "cmd_search.h"
 
 class CmdBase;
@@ -33,6 +34,8 @@ class Controller {
 
   void initilize_write_cmd_map();
   void initilize_insert_cmd_map();
+
+  int convert_ctrl(char c);
 
   TextModel *model;
 
