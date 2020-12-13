@@ -2,6 +2,37 @@
 
 using namespace std;
 
+Cmdf::Cmdf(char c) : to_find{c} {}
+
+void Cmdf::exec(TextModel *model) {
+  // Store previous occurance location in text model state
+  // Restore prev loc or find first occurance
+  // Move cursor to next occurance
+  // If no next occurance don't move and beep
+
+  int start_loc = model->get_x();
+
+  // Restore prev found loc and target char
+  if (to_find == '\0') {
+    to_find = model->state_str["cmd_f_prev_char"][0];
+    // Move one past previous loc found, to find next
+    start_loc = model->state_int["cmd_f_prev_loc"] + 1;
+  }
+
+  string ln = model->get_lines()->at(model->get_y());
+  // Find first occruance past cur x
+  size_t pos = ln.find(to_find, start_loc);
+  // If not found stay at cur pos
+  if (string::npos == pos) {
+    pos = model->get_x();
+    beep();
+  }
+  model->set_x(pos);
+  // Store state for location where found and target char
+  model->state_str["cmd_f_prev_char"] = to_find;
+  model->state_int["cmd_f_prev_loc"] = pos;
+}
+
 Posn CmdSearchBase::find_next_occurance(TextModel *model, std::string query,
                                         Posn start_pos) {
   int cur_y = start_pos.y;

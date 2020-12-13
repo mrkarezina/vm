@@ -1,12 +1,29 @@
 #ifndef CMD_SEARCH_H
 #define CMD_SEARCH_H
 
+#include <ncurses.h>
+
 #include <stdexcept>
 #include <string>
 
 #include "cmd_base.h"
 #include "posn.h"
 #include "text_model.h"
+
+/**
+ * Supports f[some char] command.
+ *
+ * Supports ',' find next command.
+ * Setting to_find to empty char '\0' will restore
+ * previously searched for char and find next occurance.
+ */
+class Cmdf : public CmdBase {
+  char to_find;
+
+ public:
+  Cmdf(char c);
+  void exec(TextModel *model);
+};
 
 /**
  * Base class for search commands

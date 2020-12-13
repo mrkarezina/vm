@@ -8,6 +8,8 @@
 #include <string>
 
 #include "cmd_basic.h"
+#include "cmd_fileio.h"
+#include "cmd_motion.h"
 #include "cmd_search.h"
 
 class CmdBase;
