@@ -20,6 +20,12 @@ unique_ptr<CmdBase> Controller::parse_input() {
   string cur_cmd = model->get_cmd_so_far();
   cur_cmd += c;
 
+  // Check if numeric prefix -> cur_cmd[0] == is num
+  // If numeric prefix an letter, substr numeric prefix and create int
+  // Parse remaining command
+  // If at end num_prefix != 0, then call gen multi command with command and
+  // num_prefix
+
   // Command mode
   if (!model->is_write_mode()) {
     if (cur_cmd == "i" || cur_cmd == "a" || cur_cmd == "I" || cur_cmd == "A" ||
@@ -27,13 +33,10 @@ unique_ptr<CmdBase> Controller::parse_input() {
       cmd = make_unique<CmdInsert>(c);
     }
     if (cur_cmd == "w" || cur_cmd == "b" || cur_cmd == "0" || cur_cmd == "^" ||
-        cur_cmd == "$") {
-      cmd = make_unique<CmdJump>(c);
-    }
-
-    // Handle single character movement commands
-    if (cur_cmd == "h" || cur_cmd == "j" || cur_cmd == "k" || cur_cmd == "l")
+        cur_cmd == "$" || cur_cmd == "h" || cur_cmd == "j" || cur_cmd == "k" ||
+        cur_cmd == "l") {
       cmd = make_unique<CmdMove>(c);
+    }
 
     // Search
     if (cur_cmd.size() > 1 && cur_cmd[0] == 'f') {
@@ -93,13 +96,12 @@ unique_ptr<CmdBase> Controller::parse_input() {
           make_unique<CmdLineSelection>(cur_cmd.substr(1, cur_cmd.size() - 2));
   }
 
-  if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
-  if (c == KEY_DOWN) cmd = make_unique<CmdMove>('j');
-
-  // Command / write mode sensitive commands
+  // Commands for both command / write mode
   if (c == 10 && cmd == nullptr) cmd = make_unique<CmdEnter>();
   if (c == 127 || c == KEY_BACKSPACE) cmd = make_unique<CmdBackspace>();
   if (c == 27) cmd = make_unique<CmdEsc>();
+  if (c == KEY_UP) cmd = make_unique<CmdMove>('k');
+  if (c == KEY_DOWN) cmd = make_unique<CmdMove>('j');
 
   // Any character written in write mode
   if (model->is_write_mode() && cmd == nullptr) {

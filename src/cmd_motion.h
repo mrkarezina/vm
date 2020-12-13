@@ -10,7 +10,10 @@
  * Supports h, j, k, l
  */
 class CmdMove : public CmdBase {
-  char move;
+  char move_type;
+
+  Posn start_next_word(TextModel *model);
+  Posn start_prev_word(TextModel *model);
 
  public:
   CmdMove(char c);

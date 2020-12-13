@@ -2,49 +2,8 @@
 
 using namespace std;
 
-CmdMove::CmdMove(char c) : move{c} {}
-
-void CmdMove::exec(TextModel *model) {
-  int x = model->get_x();
-  int y = model->get_y();
-
-  if (move == 'h') {
-    if (x > 0)
-      model->set_x(x - 1);
-    else
-      beep();
-  }
-
-  if (move == 'l') {
-    if (x + 1 < model->get_lines()->at(y).size())
-      model->set_x(x + 1);
-    else
-      beep();
-  }
-  // Up
-  if (move == 'k') {
-    if (y > 0) {
-      model->set_y(y - 1);
-      int new_x = model->get_lines()->at(y - 1).size();
-      if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
-    } else
-      beep();
-  }
-  // Down
-  if (move == 'j') {
-    if (y < model->get_lines()->size() - 1) {
-      model->set_y(y + 1);
-      int new_x = model->get_lines()->at(y + 1).size();
-      if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
-    } else
-      beep();
-  }
-}
-
-CmdJump::CmdJump(char c) : jump_type{c} {}
-
 // Returns posn of start of next word
-Posn start_next_word(TextModel *model) {
+Posn CmdMove::start_next_word(TextModel *model) {
   // Begining of next word
   // If non left on line, start begining of next line
   string ln = model->get_line_at();
@@ -60,7 +19,7 @@ Posn start_next_word(TextModel *model) {
 }
 
 // Returns posn of start of prev word
-Posn start_prev_word(TextModel *model) {
+Posn CmdMove::start_prev_word(TextModel *model) {
   string ln = model->get_line_at();
   size_t first = ln.rfind(' ', model->get_x() - 2);
   if (first == string::npos) {
@@ -75,11 +34,48 @@ Posn start_prev_word(TextModel *model) {
   return Posn{(int)first + 1, model->get_y()};
 }
 
-void CmdJump::exec(TextModel *model) {
+CmdMove::CmdMove(char c) : move_type{c} {}
+
+void CmdMove::exec(TextModel *model) {
+  int x = model->get_x();
+  int y = model->get_y();
+
   string ln = model->get_lines()->at(model->get_y());
   size_t ln_size = ln.size();
 
-  switch (jump_type) {
+  switch (move_type) {
+    case 'h': {
+      if (x > 0)
+        model->set_x(x - 1);
+      else
+        beep();
+      break;
+    }
+    case 'l': {
+      if (x + 1 < model->get_lines()->at(y).size())
+        model->set_x(x + 1);
+      else
+        beep();
+      break;
+    }
+    case 'k': {
+      if (y > 0) {
+        model->set_y(y - 1);
+        int new_x = model->get_lines()->at(y - 1).size();
+        if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
+      } else
+        beep();
+      break;
+    }
+    case 'j': {
+      if (y < model->get_lines()->size() - 1) {
+        model->set_y(y + 1);
+        int new_x = model->get_lines()->at(y + 1).size();
+        if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
+      } else
+        beep();
+      break;
+    }
     case '0':
       model->set_x(0);
       break;
@@ -108,7 +104,7 @@ void CmdJump::exec(TextModel *model) {
       break;
     }
     default:
-      throw invalid_argument("Unrecognized jump_type: " + to_string(jump_type));
+      throw invalid_argument("Unrecognized move_type: " + to_string(move_type));
       break;
   }
 }
