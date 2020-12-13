@@ -1,4 +1,4 @@
-#include "view-cmd-bar.h"
+#include "view_cmd_bar.h"
 
 using namespace std;
 

@@ -8,8 +8,8 @@
 #include <string>
 
 #include "text_model.h"
-#include "view-cmd-bar.h"
-#include "view-text.h"
+#include "view_cmd_bar.h"
+#include "view_text.h"
 
 class App {
   // TODO: make this a unqiue pointer, requires copy constructor

@@ -11,7 +11,7 @@
 #include "controller.h"
 #include "file_util.h"
 #include "posn.h"
-#include "view-base.h"
+#include "view_base.h"
 
 class Controller;
 

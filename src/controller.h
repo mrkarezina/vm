@@ -7,9 +7,8 @@
 #include <memory>
 #include <string>
 
-#include "cmd-basic.h"
-#include "cmd-motion.h"
-#include "cmd-search.h"
+#include "cmd_basic.h"
+#include "cmd_search.h"
 
 class CmdBase;
 class TextModel;

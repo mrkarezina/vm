@@ -1,4 +1,4 @@
-#include "view-text.h"
+#include "view_text.h"
 
 using namespace std;
 

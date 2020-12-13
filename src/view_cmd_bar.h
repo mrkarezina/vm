@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "view-base.h"
+#include "view_base.h"
 #include "text_model.h"
 #include "window.h"
 
