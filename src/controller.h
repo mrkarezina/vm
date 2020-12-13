@@ -20,7 +20,7 @@ class Controller {
 
  public:
   Controller(TextModel *model);
-  std::unique_ptr<CmdBase> parse_input();
+  std::shared_ptr<CmdBase> parse_input();
 };
 
 #endif

@@ -6,10 +6,10 @@ Controller::Controller(TextModel *model) : model{model} {
   parser = make_unique<Parser>(model);
 }
 
-unique_ptr<CmdBase> Controller::parse_input() {
+shared_ptr<CmdBase> Controller::parse_input() {
   set_escdelay(0);
   int c = getch();
-  unique_ptr<CmdBase> cmd = nullptr;
+  shared_ptr<CmdBase> cmd = nullptr;
 
   string cur_cmd = model->get_cmd_so_far();
   cur_cmd += c;

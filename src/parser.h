@@ -35,17 +35,17 @@ class Parser {
    * Parses commands requiring all input until enter key.
    * : ? /
    */
-  std::unique_ptr<CmdBase> parse_wait_until_enter(int c);
+  std::shared_ptr<CmdBase> parse_wait_until_enter(int c);
   /**
    * Attempts to parse command mode commands based on
    * current c and text model state.
    *
    * If no command matched returns nullptr
    */
-  std::unique_ptr<CmdBase> parse_command_mode(int c);
-  std::unique_ptr<CmdBase> parse_insert_mode(int c);
-  std::unique_ptr<CmdBase> parse_any_mode(int c);
-  std::unique_ptr<CmdBase> parse_multiplier(int c);
+  std::shared_ptr<CmdBase> parse_command_mode(int c);
+  std::shared_ptr<CmdBase> parse_insert_mode(int c);
+  std::shared_ptr<CmdBase> parse_any_mode(int c);
+  std::shared_ptr<CmdBase> parse_multiplier(int c);
 
   /**
    * Resets temporary state if command matched

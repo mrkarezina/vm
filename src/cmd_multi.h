@@ -17,10 +17,10 @@ class TextModel;
  * - Array of w and q commands
  */
 class CmdMultiCommand : public CmdBase {
-  std::vector<std::unique_ptr<CmdBase>> commands;
+  std::vector<std::shared_ptr<CmdBase>> commands;
 
  public:
-  void add_command(std::unique_ptr<CmdBase>);
+  void add_command(std::shared_ptr<CmdBase>);
   void exec(TextModel *model);
 };
 

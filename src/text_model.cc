@@ -99,7 +99,7 @@ void TextModel::add_view(unique_ptr<ViewBase> view) {
   views.push_back(move(view));
 }
 
-void TextModel::apply(unique_ptr<CmdBase> cmd) { cmd->exec(this); }
+void TextModel::apply(shared_ptr<CmdBase> cmd) { cmd->exec(this); }
 
 void TextModel::render() {
   for (auto &v : views) {

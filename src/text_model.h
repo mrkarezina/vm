@@ -35,7 +35,7 @@ class TextModel {
   void add_view(std::unique_ptr<ViewBase> view);
   void render();
 
-  void apply(std::unique_ptr<CmdBase> cmd);
+  void apply(std::shared_ptr<CmdBase> cmd);
 
   void set_render_loop_off();
   void toggle_mode();

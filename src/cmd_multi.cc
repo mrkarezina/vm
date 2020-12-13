@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void CmdMultiCommand::add_command(std::unique_ptr<CmdBase> cmd) {
+void CmdMultiCommand::add_command(std::shared_ptr<CmdBase> cmd) {
   commands.emplace_back(std::move(cmd));
 }
 
