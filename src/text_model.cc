@@ -37,6 +37,10 @@ bool TextModel::is_show_file_stats() { return show_file_stats; }
 
 void TextModel::set_show_file_stats(bool show) { show_file_stats = show; }
 
+bool TextModel::is_display_save_warning() { return display_save_warning; }
+
+void TextModel::set_display_save_warning(bool show) { display_save_warning = show; }
+
 string TextModel::get_file_name() { return filename; }
 
 void TextModel::save_lines() { write_lines(filename, lines); }

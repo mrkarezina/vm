@@ -13,10 +13,12 @@ class History {
   std::vector<Posn> cursor_states;
 
  public:
+  History();
   void record_state(TextModel *model);
   std::vector<std::string> pop_last_text_state();
   Posn pop_last_cursor_state();
   int state_size();
+  int change_since_write;
 };
 
 #endif

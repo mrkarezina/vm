@@ -39,6 +39,9 @@ void ViewCmdBar::draw(TextModel *model) {
     win->write_line("-- INSERT --", 0, 0);
   } else if (model->get_cmd_so_far().size() > 0) {
     win->write_line(model->get_cmd_so_far(), 0, 0);
+  } else if (model->is_display_save_warning()) {
+    win->write_line("No write since last change (add ! to override)", 0, 0);
+    model->set_display_save_warning(false);
   } else if (model->is_show_file_stats()) {
     win->write_line("\"" + model->get_file_name() + "\" " +
                         to_string((int)model->get_lines()->size()) + " lines " +

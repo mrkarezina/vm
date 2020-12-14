@@ -15,6 +15,11 @@ class CmdQuit : public CmdBase {
   void exec(TextModel *model);
 };
 
+class CmdQuitWarning : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
 /**
  * Composite command of write and quit
  */

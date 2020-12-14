@@ -36,7 +36,7 @@ std::shared_ptr<CmdBase> Parser::parse_wait_until_enter(int c) {
   if (cur_cmd.substr(0, 3) == ":q!" && c == 10) return make_shared<CmdQuit>();
   if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
     return make_shared<CmdSaveExit>();
-  if (cur_cmd.substr(0, 2) == ":q" && c == 10) return make_shared<CmdQuit>();
+  if (cur_cmd.substr(0, 2) == ":q" && c == 10) return make_shared<CmdQuitWarning>();
   if (cur_cmd.substr(0, 2) == ":w" && c == 10)
     return make_shared<CmdSaveLines>();
 

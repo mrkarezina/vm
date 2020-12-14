@@ -29,6 +29,7 @@ class TextModel {
   std::string cmd_so_far;
 
   bool show_file_stats = false;
+  bool display_save_warning = false;
 
  public:
   TextModel(std::string &filename);
@@ -46,6 +47,8 @@ class TextModel {
 
   bool is_show_file_stats();
   void set_show_file_stats(bool show);
+  bool is_display_save_warning();
+  void set_display_save_warning(bool show);
 
   std::string get_file_name();
   void save_lines();
