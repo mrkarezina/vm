@@ -96,6 +96,8 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
     return make_shared<Cmdf>('\0');
   }
 
+  if (cur_cmd == "u") return make_shared<CmdUndo>();
+
   // Substitute commands
   if (cur_cmd == "s" || cur_cmd == "S") return make_shared<CmdsS>(c);
 

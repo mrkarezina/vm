@@ -84,4 +84,9 @@ class CmdPaste : public CmdBase {
   void exec(TextModel *model);
 };
 
+class CmdUndo : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
 #endif

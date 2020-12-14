@@ -157,3 +157,14 @@ void CmdPaste::exec(TextModel *model) {
     }
   }
 }
+
+void CmdUndo::exec(TextModel *model) {
+  // Pop state before undo command
+  model->history->pop_last_text_state();
+  model->history->pop_last_cursor_state();
+  if (model->history->state_size() > 0) {
+    model->set_lines(model->history->pop_last_text_state());
+    Posn undo = model->history->pop_last_cursor_state();
+    model->set_posn(undo);
+  }
+}

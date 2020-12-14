@@ -10,6 +10,6 @@ void CmdMultiCommand::add_command(std::shared_ptr<CmdBase> cmd) {
 
 void CmdMultiCommand::exec(TextModel *model) {
   for (auto &command : commands) {
-    model->apply(std::move(command));
+    command->exec(model);
   }
 }

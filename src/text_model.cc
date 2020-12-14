@@ -9,6 +9,7 @@ TextModel::TextModel(string &filename) : filename{filename} {
   write_mode = false;
   cursor_posn = Posn(0, 0);
   clipboard = make_unique<Clipboard>();
+  history = make_unique<History>();
 
   // lines = make_shared<vector<string>>();
   // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1
@@ -45,6 +46,8 @@ string TextModel::get_cmd_so_far() { return cmd_so_far; }
 void TextModel::set_cmd_so_far(string cmd) { cmd_so_far = cmd; }
 
 const shared_ptr<vector<string>> TextModel::get_lines() { return lines; }
+
+void TextModel::set_lines(std::vector<std::string> ln) { *lines = ln; }
 
 string TextModel::get_line_at(int y) {
   return lines->at(y == -1 ? get_y() : y);
@@ -103,7 +106,10 @@ void TextModel::add_view(unique_ptr<ViewBase> view) {
   views.push_back(move(view));
 }
 
-void TextModel::apply(shared_ptr<CmdBase> cmd) { cmd->exec(this); }
+void TextModel::apply(shared_ptr<CmdBase> cmd) {
+  history->record_state(this);
+  cmd->exec(this);
+}
 
 void TextModel::render() {
   for (auto &v : views) {

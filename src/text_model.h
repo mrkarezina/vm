@@ -11,6 +11,7 @@
 #include "cmd_base.h"
 #include "controller.h"
 #include "file_util.h"
+#include "history.h"
 #include "posn.h"
 #include "view_base.h"
 
@@ -55,6 +56,7 @@ class TextModel {
   void save_state_data(std::string key, int data);
 
   const std::shared_ptr<std::vector<std::string>> get_lines();
+  void set_lines(std::vector<std::string> ln);
   // Defaults to current cursor y position
   std::string get_line_at(int y = -1);
   void set_line_at(std::string s, int y = -1);
@@ -78,6 +80,7 @@ class TextModel {
   void set_posn(Posn &pos);
 
   std::unique_ptr<Clipboard> clipboard;
+  std::unique_ptr<History> history;
 
   // Arbitrary state data for commands
   // TODO: getter setters
