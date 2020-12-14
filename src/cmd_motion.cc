@@ -2,7 +2,6 @@
 
 using namespace std;
 
-// Left
 Posn CmdMoveBase::move_h(TextModel *model) {
   Posn start = model->get_posn();
   if (start.x > 0)
@@ -20,7 +19,6 @@ Posn CmdMoveBase::move_l(TextModel *model) {
     return start;
 }
 
-// Up
 Posn CmdMoveBase::move_k(TextModel *model) {
   int x = model->get_x();
   int y = model->get_y();
@@ -36,7 +34,6 @@ Posn CmdMoveBase::move_k(TextModel *model) {
   return Posn(new_x, new_y);
 }
 
-// Down
 Posn CmdMoveBase::move_j(TextModel *model) {
   int x = model->get_x();
   int y = model->get_y();
@@ -50,6 +47,24 @@ Posn CmdMoveBase::move_j(TextModel *model) {
     }
   }
   return Posn(new_x, new_y);
+}
+
+Posn CmdMoveBase::move_0(TextModel *model) { return Posn(0, model->get_y()); }
+
+Posn CmdMoveBase::move_caret(TextModel *model) {
+  string ln = model->get_line_at();
+  size_t ln_size = ln.size();
+  ln_size = ln_size == 0 ? 0 : ln_size - 1;
+  size_t first = ln.find_first_not_of(' ');
+  // If no non-whitespace characters found move to end of line
+  return Posn(first == string::npos ? ln_size : first, model->get_y());
+}
+
+Posn CmdMoveBase::move_dollar(TextModel *model) {
+  string ln = model->get_line_at();
+  size_t ln_size = ln.size();
+  ln_size = ln_size == 0 ? 0 : ln_size - 1;
+  return Posn(ln_size, model->get_y());
 }
 
 // Returns posn of start of next word
@@ -126,19 +141,19 @@ void CmdMove::exec(TextModel *model) {
         model->set_posn(end);
       break;
     }
-    case '0':
-      model->set_x(0);
+    case '0': {
+      Posn end = move_0(model);
+      model->set_posn(end);
       break;
+    }
     case '^': {
-      // If no non-whitespace characters found move to end of line
-      size_t first = ln.find_first_not_of(' ');
-      ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->set_x(first == string::npos ? ln_size : first);
+      Posn end = move_caret(model);
+      model->set_posn(end);
       break;
     }
     case '$': {
-      ln_size = ln_size == 0 ? 0 : ln_size - 1;
-      model->set_x(ln_size);
+      Posn end = move_dollar(model);
+      model->set_posn(end);
       break;
     }
     case 'b': {
@@ -198,12 +213,75 @@ void CmdcC::exec(TextModel *model) {
 
 CmddD::CmddD(char c) : del_type{c} {}
 
+void CmddD::delete_core(TextModel *model, Posn end) {
+  Posn cur = model->get_posn();
+  if (cur != end) {
+    if (cur.y == end.y) {
+      string ln = model->get_line_at();
+      if (end.x > cur.x) {
+        model->set_line_at(ln.erase(cur.x, end.x - cur.x));
+      } else {
+        model->set_line_at(ln.erase(end.x, cur.x - end.x));
+        model->set_x(end.x);
+      }
+    } else {
+      // Delete cur lin
+      model->delete_line(model->get_y());
+      if (cur.y > end.y) {
+        for (int i = 0; i < abs(cur.y - end.y); i++) {
+          model->set_y(model->get_y() - 1);
+          model->delete_line(model->get_y());
+        }
+      } else {
+        // Delete lines through end.y
+        for (int i = 0; i < abs(cur.y - end.y); i++) {
+          model->delete_line(model->get_y());
+        }
+        // If you delete the last line, need to move y back
+        if (model->get_y() >= model->get_lines()->size()) {
+          model->set_y(model->get_lines()->size() - 1);
+        }
+      }
+      model->set_x(0);
+    }
+  }
+}
+
 void CmddD::exec(TextModel *model) {
   switch (del_type) {
+    case 'h': {
+      Posn end = move_h(model);
+      delete_core(model, end);
+      break;
+    }
+    case 'l': {
+      Posn end = move_l(model);
+      delete_core(model, end);
+      break;
+    }
+    case 'k': {
+      Posn end = move_k(model);
+      delete_core(model, end);
+      break;
+    }
+    case 'j': {
+      Posn end = move_j(model);
+      delete_core(model, end);
+      break;
+    }
+    case '0': {
+      Posn end = move_0(model);
+      delete_core(model, end);
+      break;
+    }
+    case '^': {
+      Posn end = move_caret(model);
+      delete_core(model, end);
+      break;
+    }
     case '$': {
-      string ln = model->get_line_at();
-      model->set_line_at(ln.substr(0, model->get_x()));
-      if (model->get_x() > 0) model->set_x(model->get_x() - 1);
+      Posn end = move_dollar(model);
+      delete_core(model, end);
       break;
     }
     case 'd': {
@@ -221,16 +299,14 @@ void CmddD::exec(TextModel *model) {
       break;
     }
     case 'w': {
-      string ln = model->get_line_at();
-      size_t first = ln.find_first_of(' ', model->get_x());
-      if (first == string::npos) {
-        // Clear from cur posn to end of line
-        model->set_line_at(ln.substr(0, model->get_x()));
-      } else {
-        // Replace from cur posn to end of word
-        model->set_line_at(
-            ln.replace(model->get_x(), first - model->get_x(), ""));
-      }
+      Posn end = start_next_word(model);
+      delete_core(model, end);
+      break;
+    }
+    case 'b': {
+      Posn end = start_prev_word(model);
+      delete_core(model, end);
+      break;
     }
     case 'x': {
       model->delete_char(model->get_x() + 1, model->get_y());

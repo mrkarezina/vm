@@ -8,10 +8,22 @@
 
 class CmdMoveBase : public CmdBase {
  protected:
+  // Left
   Posn move_h(TextModel *model);
+  // Right
   Posn move_l(TextModel *model);
+  // Up
   Posn move_k(TextModel *model);
+  // Down
   Posn move_j(TextModel *model);
+
+  // Front of line
+  Posn move_0(TextModel *model);
+  // Location of first word in line
+  Posn move_caret(TextModel *model);
+  // End of line
+  Posn move_dollar(TextModel *model);
+
   Posn start_next_word(TextModel *model);
   Posn start_prev_word(TextModel *model);
 };
@@ -54,8 +66,13 @@ class CmdcC : public CmdBase {
  * Deletion commands
  * d[any motion], dd, x, X
  */
-class CmddD : public CmdBase {
+class CmddD : public CmdMoveBase {
   char del_type;
+
+  /**
+   * Deletes from the current position to the end position
+   */
+  void delete_core(TextModel *model, Posn end);
 
  public:
   CmddD(char c);

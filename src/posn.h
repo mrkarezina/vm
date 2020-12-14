@@ -9,6 +9,9 @@ struct Posn {
   bool operator==(const Posn &other) const {
     return x == other.x && y == other.y;
   }
+  bool operator!=(const Posn &other) const {
+    return x != other.x || y != other.y;
+  }
 };
 
 #endif

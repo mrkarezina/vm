@@ -56,20 +56,22 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
 
   if (stall_until_enter) return parse_wait_until_enter(c);
 
+  // Clear any motion
+  if (cur_cmd[0] == 'c' && cur_cmd.size() > 1 &&
+      vec_contains<char>(motion_cmd_list, c))
+    return make_shared<CmdcC>(c);
+
+  // Delete any motion
+  if (cur_cmd[0] == 'd' && cur_cmd.size() > 1 &&
+      vec_contains<char>(motion_cmd_list, c))
+    return make_shared<CmddD>(c);
+
   if (vec_contains<char>(motion_cmd_list, c)) {
     return make_shared<CmdMove>(c);
   }
   if (vec_contains<char>(insert_cmd_list, c)) {
     return make_shared<CmdInsert>(c);
   }
-
-  // Clear any motion
-  if (cur_cmd[0] == 'c' && vec_contains<char>(motion_cmd_list, c))
-    return make_shared<CmdcC>(c);
-
-  // Delete any motion
-  if (cur_cmd[0] == 'd' && vec_contains<char>(motion_cmd_list, c))
-    return make_shared<CmddD>(c);
 
   // Copy any motion
   if (cur_cmd[0] == 'y' && vec_contains<char>(motion_cmd_list, c))
