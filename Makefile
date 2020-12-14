@@ -1,4 +1,4 @@
-CXX = g++ -lncurses
+CXX = g++
 CXXFLAGS = -std=c++14 -Wall -MMD
 EXEC = vm
 SRCDIR = src
@@ -9,7 +9,7 @@ OBJECTS := $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(SOURCES))
 DEPENDS = ${OBJECTS:.o=.d}
 
 ${BINDIR}/${EXEC}: ${OBJECTS} | ${BINDIR}
-	${CXX} ${OBJECTS} -o ${BINDIR}/${EXEC}
+	${CXX} ${OBJECTS} -o ${BINDIR}/${EXEC} -lncurses
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc | ${OBJDIR}
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
