@@ -89,8 +89,14 @@ class CmddD : public CmdMoveBase {
  * Yank commands
  * y[any motion], yy, x
  */
-class CmdyY : public CmdBase {
+class CmdyY : public CmdMoveBase {
   char yank_type;
+
+  /**
+   * Copies contents up to end posn. Indicate whether to paste starting on
+   * newline depending on command.
+   */
+  void yank_core(TextModel *model, Posn end, bool newline);
 
  public:
   CmdyY(char c);

@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "clipboard.h"
 #include "cmd_base.h"
 #include "controller.h"
 #include "file_util.h"
@@ -20,6 +21,7 @@ class TextModel {
   std::vector<std::unique_ptr<ViewBase>> views;
   Posn cursor_posn;
   std::unique_ptr<Controller> controller;
+
   std::string filename;
   bool render_loop_on = true;
   bool write_mode;
@@ -74,6 +76,8 @@ class TextModel {
   int get_y();
   Posn get_posn();
   void set_posn(Posn &pos);
+
+  std::unique_ptr<Clipboard> clipboard;
 
   // Arbitrary state data for commands
   // TODO: getter setters

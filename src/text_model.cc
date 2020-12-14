@@ -8,6 +8,7 @@ TextModel::TextModel(string &filename) : filename{filename} {
   controller = make_unique<Controller>(this);
   write_mode = false;
   cursor_posn = Posn(0, 0);
+  clipboard = make_unique<Clipboard>();
 
   // lines = make_shared<vector<string>>();
   // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1

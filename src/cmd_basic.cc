@@ -135,30 +135,25 @@ void CmdsS::exec(TextModel *model) {
 CmdPaste::CmdPaste(char c) : paste_type{c} {}
 
 void CmdPaste::exec(TextModel *model) {
-  switch (paste_type) {
-    case 'p': {
-      // Paste below cur line
-      model->new_line(model->get_line_at().size(), model->get_y());
-      model->set_y(model->get_y() + 1);
-      try {
-        model->set_line_at(model->state_str["copied_data"]);
-      } catch (std::out_of_range const e) {
+  if (model->clipboard->get_lines().size() > 0) {
+    if (model->clipboard->is_paste_on_newline()) {
+      for (auto l : model->clipboard->get_lines()) {
+        if (paste_type == 'p') {
+          model->new_line(model->get_line_at().size(), model->get_y());
+          model->set_y(model->get_y() + 1);
+          model->set_line_at(l);
+        } else {
+          model->new_line(0, model->get_y());
+          model->set_line_at(l);
+        }
       }
-      break;
+      model->set_x(0);
+    } else {
+      string ln = model->get_line_at();
+      ln.insert(model->get_x(), model->clipboard->get_lines()[0]);
+      model->set_line_at(ln);
+      if (paste_type == 'P')
+        model->set_x(min(model->get_x() + 1, (int)ln.size() - 1));
     }
-    case 'P': {
-      // Paste above cur line
-      model->new_line(0, model->get_y());
-      try {
-        model->set_line_at(model->state_str["copied_data"]);
-      } catch (std::out_of_range const e) {
-      }
-      break;
-    }
-    default:
-      throw invalid_argument("Unrecognized paste_type: " +
-                             to_string(paste_type));
-      break;
   }
-  model->set_x(0);
 }

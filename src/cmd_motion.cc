@@ -382,11 +382,82 @@ void CmddD::exec(TextModel *model) {
 
 CmdyY::CmdyY(char c) : yank_type{c} {}
 
+void CmdyY::yank_core(TextModel *model, Posn end, bool newline) {
+  model->clipboard->set_paste_on_newline(newline);
+  Posn cur = model->get_posn();
+  if (cur != end) {
+    if (cur.y == end.y) {
+      string ln = model->get_line_at();
+      if (end.x > cur.x) {
+        model->clipboard->add_line(ln.substr(cur.x, end.x - cur.x));
+      } else {
+        model->clipboard->add_line(ln.substr(end.x, cur.x - end.x));
+      }
+    } else {
+      // Plus 1 to copy start line as well
+      for (int i = 0; i < abs(cur.y - end.y) + 1; i++) {
+        int y_loc;
+        if (cur.y > end.y)
+          y_loc = end.y + i;
+        else
+          y_loc = cur.y + i;
+        model->clipboard->add_line(model->get_line_at(y_loc));
+      }
+    }
+  }
+}
+
 void CmdyY::exec(TextModel *model) {
+  model->clipboard->clear();
   switch (yank_type) {
+    case 'h': {
+      Posn end = move_h(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case 'l': {
+      Posn end = move_l(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case 'k': {
+      Posn end = move_k(model);
+      yank_core(model, end, true);
+      break;
+    }
+    case 'j': {
+      Posn end = move_j(model);
+      yank_core(model, end, true);
+      break;
+    }
+    case '0': {
+      Posn end = move_0(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case '^': {
+      Posn end = move_caret(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case '$': {
+      Posn end = move_dollar(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case 'w': {
+      Posn end = start_next_word(model);
+      yank_core(model, end, false);
+      break;
+    }
+    case 'b': {
+      Posn end = start_prev_word(model);
+      yank_core(model, end, false);
+      break;
+    }
     case 'y': {
-      // Save copied data to state
-      model->state_str["copied_data"] = model->get_line_at();
+      model->clipboard->set_paste_on_newline(true);
+      model->clipboard->add_line(model->get_line_at());
       break;
     }
     default:

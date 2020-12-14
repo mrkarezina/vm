@@ -66,6 +66,11 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
       vec_contains<char>(motion_cmd_list, c))
     return make_shared<CmddD>(c);
 
+  // Yank any motion
+  if (cur_cmd[0] == 'y' && cur_cmd.size() > 1 &&
+      vec_contains<char>(motion_cmd_list, c))
+    return make_shared<CmdyY>(c);
+
   if (vec_contains<char>(motion_cmd_list, c)) {
     return make_shared<CmdMove>(c);
   }
