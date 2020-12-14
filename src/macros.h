@@ -23,6 +23,7 @@ class Macros {
 
   // Set letter to associate recording to
   void set_current_letter(char macro);
+  char get_current_letter();
 
   bool is_recording_macro();
   void set_recording_macro(bool show);

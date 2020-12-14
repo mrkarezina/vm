@@ -35,29 +35,28 @@ void ViewCmdBar::draw_cursor_posn(TextModel *model) {
 
 void ViewCmdBar::draw(TextModel *model) {
   win->erase_w();
+
+  string ln = "";
+  if (model->macros->is_recording_macro()) {
+    ln += "recording @" + string{model->macros->get_current_letter()} + " ";
+  }
   if (model->is_write_mode()) {
-    win->write_line("-- INSERT --", 0, 0);
+    ln += "-- INSERT --";
   } else if (model->get_cmd_so_far().size() > 0) {
-    win->write_line(model->get_cmd_so_far(), 0, 0);
+    model->get_cmd_so_far();
   } else if (model->is_display_save_warning()) {
-    win->write_line("No write since last change (add ! to override)", 0, 0);
+    ln += "No write since last change (add ! to override)";
     model->set_display_save_warning(false);
   } else if (model->is_show_file_stats()) {
-    win->write_line("\"" + model->get_file_name() + "\" " +
-                        to_string((int)model->get_lines()->size()) + " lines " +
-                        " --" + scroll_percentage(model) + "-- ",
-                    0, 0);
+    ln += "\"" + model->get_file_name() + "\" " +
+          to_string((int)model->get_lines()->size()) + " lines " + " --" +
+          scroll_percentage(model) + "-- ";
     // Don't show after next command
     model->set_show_file_stats(false);
   } else {
-    if (model->macros->is_recording_macro()) {
-      win->write_line("Recording macro ...", 0, 0);
-    } else {
-      win->write_line("\"" + model->get_file_name() + "\"", 0, 0);
-    }
+    ln += "\"" + model->get_file_name() + "\"";
   }
-
+  win->write_line(ln, 0, 0);
   draw_cursor_posn(model);
-
   win->refresh_w();
 }

@@ -11,6 +11,7 @@ void Macros::record_command(std::shared_ptr<CmdBase> cmd) {
 }
 
 void Macros::set_current_letter(char macro) { current_letter = macro; }
+char Macros::get_current_letter() { return current_letter; }
 
 shared_ptr<CmdBase> Macros::generate_playback_command(char macro) {
   shared_ptr<CmdMultiCommand> multi = make_shared<CmdMultiCommand>();
