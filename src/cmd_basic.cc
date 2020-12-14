@@ -98,6 +98,23 @@ void CmdInsert::exec(TextModel *model) {
   model->toggle_mode();
 }
 
+void CmdJ::exec(TextModel *model) {
+  if (1 < model->get_lines()->size() &&
+      model->get_y() < model->get_lines()->size() - 1) {
+    string ln = model->get_line_at(model->get_y() + 1);
+    int x = model->get_line_at().size() - 1;
+    if (ln.size() > 0) {
+      model->set_line_at(model->get_line_at() + " " + ln);
+      x += 1;
+    }
+    model->delete_line(model->get_y() + 1);
+    if (model->get_y() >= model->get_lines()->size()) {
+      model->set_y(model->get_lines()->size() - 1);
+    }
+    model->set_x(x);
+  }
+}
+
 void CmdStall::exec(TextModel *model) {}
 
 CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}

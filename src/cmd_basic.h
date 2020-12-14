@@ -38,6 +38,14 @@ class CmdStall : public CmdBase {
 };
 
 /**
+ * Combine two lines together.
+ */
+class CmdJ : public CmdBase {
+ public:
+  void exec(TextModel *model);
+};
+
+/**
  * Handles i, I, a, A, o, O
  */
 class CmdInsert : public CmdBase {
