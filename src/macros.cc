@@ -4,11 +4,19 @@
 
 using namespace std;
 
-Macros::Macros() { recording_macro = false; }
+Macros::Macros() {
+  recording_macro = false;
+  to_record = true;
+}
 
 void Macros::record_command(std::shared_ptr<CmdBase> cmd) {
   if (is_recording_macro()) {
-    recorded_commands[current_letter].push_back(cmd);
+    // Prevent commands such as . and nested macro from being recorded
+    if (to_record) {
+      recorded_commands[current_letter].push_back(cmd);
+    } else {
+      to_record = true;
+    }
   }
 }
 
@@ -28,3 +36,5 @@ void Macros::clear(char macro) { recorded_commands[macro].clear(); }
 bool Macros::is_recording_macro() { return recording_macro; }
 
 void Macros::set_recording_macro(bool record) { recording_macro = record; }
+
+void Macros::set_to_record(bool record) { to_record = record; }

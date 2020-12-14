@@ -16,6 +16,7 @@ CmdPlayBackMacro::CmdPlayBackMacro(char macro) : macro{macro} {}
 
 void CmdPlayBackMacro::exec(TextModel *model) {
   model->apply(model->macros->generate_playback_command(macro));
+  model->macros->set_to_record(false);
 }
 
 void CmdPlaybackPrev::exec(TextModel *model) {
@@ -25,4 +26,6 @@ void CmdPlaybackPrev::exec(TextModel *model) {
   }
   // Prevent recording undo command resulting in infinite loop
   model->history->set_replace_prev_command(false);
+  // Don't record the playback command, rather the commands themselves
+  model->macros->set_to_record(false);
 }

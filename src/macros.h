@@ -11,6 +11,7 @@ class Macros {
   std::map<char, std::vector<std::shared_ptr<CmdBase>>> recorded_commands;
 
   bool recording_macro;
+  bool to_record;
   char current_letter;
 
  public:
@@ -27,6 +28,8 @@ class Macros {
 
   bool is_recording_macro();
   void set_recording_macro(bool show);
+
+  void set_to_record(bool record);
 };
 
 #endif
