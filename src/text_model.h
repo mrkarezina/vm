@@ -12,6 +12,7 @@
 #include "controller.h"
 #include "file_util.h"
 #include "history.h"
+#include "macros.h"
 #include "posn.h"
 #include "view_base.h"
 
@@ -84,6 +85,7 @@ class TextModel {
 
   std::unique_ptr<Clipboard> clipboard;
   std::unique_ptr<History> history;
+  std::unique_ptr<Macros> macros;
 
   // Arbitrary state data for commands
   // TODO: getter setters

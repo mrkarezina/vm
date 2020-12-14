@@ -50,7 +50,11 @@ void ViewCmdBar::draw(TextModel *model) {
     // Don't show after next command
     model->set_show_file_stats(false);
   } else {
-    win->write_line("\"" + model->get_file_name() + "\"", 0, 0);
+    if (model->macros->is_recording_macro()) {
+      win->write_line("Recording macro ...", 0, 0);
+    } else {
+      win->write_line("\"" + model->get_file_name() + "\"", 0, 0);
+    }
   }
 
   draw_cursor_posn(model);

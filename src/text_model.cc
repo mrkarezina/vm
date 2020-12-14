@@ -10,6 +10,7 @@ TextModel::TextModel(string &filename) : filename{filename} {
   cursor_posn = Posn(0, 0);
   clipboard = make_unique<Clipboard>();
   history = make_unique<History>();
+  macros = make_unique<Macros>();
 
   // lines = make_shared<vector<string>>();
   // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1
@@ -39,7 +40,9 @@ void TextModel::set_show_file_stats(bool show) { show_file_stats = show; }
 
 bool TextModel::is_display_save_warning() { return display_save_warning; }
 
-void TextModel::set_display_save_warning(bool show) { display_save_warning = show; }
+void TextModel::set_display_save_warning(bool show) {
+  display_save_warning = show;
+}
 
 string TextModel::get_file_name() { return filename; }
 
@@ -112,6 +115,9 @@ void TextModel::add_view(unique_ptr<ViewBase> view) {
 
 void TextModel::apply(shared_ptr<CmdBase> cmd) {
   history->record_state(this);
+  if (macros->is_recording_macro()) {
+    macros->record_command(cmd);
+  }
   cmd->exec(this);
 }
 

@@ -2,6 +2,7 @@
 
 #include "cmd_basic.h"
 #include "cmd_fileio.h"
+#include "cmd_macro.h"
 #include "cmd_motion.h"
 #include "cmd_multi.h"
 #include "cmd_page_nav.h"
@@ -36,7 +37,8 @@ std::shared_ptr<CmdBase> Parser::parse_wait_until_enter(int c) {
   if (cur_cmd.substr(0, 3) == ":q!" && c == 10) return make_shared<CmdQuit>();
   if (cur_cmd.substr(0, 3) == ":wq" && c == 10)
     return make_shared<CmdSaveExit>();
-  if (cur_cmd.substr(0, 2) == ":q" && c == 10) return make_shared<CmdQuitWarning>();
+  if (cur_cmd.substr(0, 2) == ":q" && c == 10)
+    return make_shared<CmdQuitWarning>();
   if (cur_cmd.substr(0, 2) == ":w" && c == 10)
     return make_shared<CmdSaveLines>();
 
@@ -55,6 +57,15 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
     stall_until_enter = true;
 
   if (stall_until_enter) return parse_wait_until_enter(c);
+
+  if (cur_cmd[0] == 'q' && cur_cmd.size() == 2)
+    return make_shared<CmdStartMacro>(cur_cmd[1]);
+
+  if (cur_cmd[0] == 'q' && model->macros->is_recording_macro())
+    return make_shared<CmdEndMacro>();
+
+  if (cur_cmd[0] == '@' && cur_cmd.size() == 2)
+    return make_shared<CmdPlayBackMacro>(cur_cmd[1]);
 
   // Clear any motion
   if (cur_cmd[0] == 'c' && cur_cmd.size() > 1 &&
