@@ -8,7 +8,7 @@ Window::Window(float w_perc, float h_perc, int x, int y) {
 }
 
 Window::Window(int width, int height, int x, int y)
-    : width{width}, height{height} {
+    : height{height}, width{width} {
   win = newwin(height, width, y, x);
 }
 

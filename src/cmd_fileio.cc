@@ -18,6 +18,6 @@ void CmdQuitWarning::exec(TextModel *model) {
 }
 
 CmdSaveExit::CmdSaveExit() {
-  add_command(std::move(make_shared<CmdSaveLines>()));
-  add_command(std::move(make_shared<CmdQuit>()));
+  add_command(make_shared<CmdSaveLines>());
+  add_command(make_shared<CmdQuit>());
 }
