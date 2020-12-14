@@ -54,7 +54,8 @@ void ViewCmdBar::draw(TextModel *model) {
     // Don't show after next command
     model->set_show_file_stats(false);
   } else {
-    ln += "\"" + model->get_file_name() + "\"";
+    if (model->get_file_name().size() > 0)
+      ln += "\"" + model->get_file_name() + "\"";
   }
   win->write_line(ln, 0, 0);
   draw_cursor_posn(model);

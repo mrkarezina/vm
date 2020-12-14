@@ -16,7 +16,12 @@ TextModel::TextModel(string &filename) : filename{filename} {
   // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1
   // Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1 Test 1");
   // lines->push_back("Test 2");
-  lines = load_lines(filename);
+  if (filename.size() > 0) {
+    lines = load_lines(filename);
+  } else {
+    lines = make_shared<vector<string>>();
+    lines->push_back("");
+  }
 }
 
 TextModel::~TextModel() {}

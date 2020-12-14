@@ -20,7 +20,7 @@ shared_ptr<vector<string>> load_lines(string filename) {
 }
 
 void write_lines(string filename, shared_ptr<vector<string>> &lines) {
-  ofstream file(filename);
+  ofstream file(filename.size() > 0 ? filename : "default_vm.txt");
   for (auto l : *lines) {
     file << l << endl;
   }

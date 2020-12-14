@@ -1,6 +1,7 @@
 #include "app.h"
 
 int main(int argc, char *argv[]) {
-  App app = App(argv[1]);
+  std::string filename = argc > 1 ? argv[1] : "";
+  App app = App(filename);
   app.run();
 }

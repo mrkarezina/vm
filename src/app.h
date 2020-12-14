@@ -12,7 +12,6 @@
 #include "view_text.h"
 
 class App {
-  // TODO: make this a unqiue pointer, requires copy constructor
   std::shared_ptr<TextModel> text_model;
 
  public:
