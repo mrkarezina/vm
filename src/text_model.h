@@ -18,7 +18,7 @@ class Controller;
 class TextModel {
   std::shared_ptr<std::vector<std::string>> lines;
   std::vector<std::unique_ptr<ViewBase>> views;
-  Posn cursor_posn{0, 0};
+  Posn cursor_posn;
   std::unique_ptr<Controller> controller;
   std::string filename;
   bool render_loop_on = true;
@@ -72,6 +72,8 @@ class TextModel {
   void set_y(int y);
   int get_x();
   int get_y();
+  Posn get_posn();
+  void set_posn(Posn &pos);
 
   // Arbitrary state data for commands
   // TODO: getter setters

@@ -6,14 +6,21 @@
 #include "cmd_base.h"
 #include "text_model.h"
 
+class CmdMoveBase : public CmdBase {
+ protected:
+  Posn move_h(TextModel *model);
+  Posn move_l(TextModel *model);
+  Posn move_k(TextModel *model);
+  Posn move_j(TextModel *model);
+  Posn start_next_word(TextModel *model);
+  Posn start_prev_word(TextModel *model);
+};
+
 /**
  * Supports h, j, k, l
  */
-class CmdMove : public CmdBase {
+class CmdMove : public CmdMoveBase {
   char move_type;
-
-  Posn start_next_word(TextModel *model);
-  Posn start_prev_word(TextModel *model);
 
  public:
   CmdMove(char c);

@@ -7,6 +7,7 @@ class text_range_access {};
 TextModel::TextModel(string &filename) : filename{filename} {
   controller = make_unique<Controller>(this);
   write_mode = false;
+  cursor_posn = Posn(0, 0);
 
   // lines = make_shared<vector<string>>();
   // lines->push_back("Test 1 Test 1 Test 1 Test 1 Test 1Test 1 Test 1 Test 1
@@ -79,9 +80,7 @@ void TextModel::delete_line_concat(int y) {
   lines->erase(lines->begin() + y);
 }
 
-void TextModel::delete_line(int y) {
-  lines->erase(lines->begin() + y);
-}
+void TextModel::delete_line(int y) { lines->erase(lines->begin() + y); }
 
 void TextModel::clear_line(int y) { lines->at(y) = ""; }
 
@@ -94,6 +93,10 @@ void TextModel::set_y(int y) { cursor_posn.y = y; }
 int TextModel::get_x() { return cursor_posn.x; }
 
 int TextModel::get_y() { return cursor_posn.y; }
+
+Posn TextModel::get_posn() { return cursor_posn; }
+
+void TextModel::set_posn(Posn &pos) { cursor_posn = pos; }
 
 void TextModel::add_view(unique_ptr<ViewBase> view) {
   views.push_back(move(view));

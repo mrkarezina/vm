@@ -2,8 +2,58 @@
 
 using namespace std;
 
+// Left
+Posn CmdMoveBase::move_h(TextModel *model) {
+  Posn start = model->get_posn();
+  if (start.x > 0)
+    return Posn(start.x - 1, start.y);
+  else
+    return start;
+}
+
+// Right
+Posn CmdMoveBase::move_l(TextModel *model) {
+  Posn start = model->get_posn();
+  if (start.x + 1 < model->get_line_at(start.y).size())
+    return Posn(start.x + 1, start.y);
+  else
+    return start;
+}
+
+// Up
+Posn CmdMoveBase::move_k(TextModel *model) {
+  int x = model->get_x();
+  int y = model->get_y();
+  int new_x = x;
+  int new_y = y;
+  if (y > 0) {
+    new_y = y - 1;
+    int next_x = model->get_lines()->at(y - 1).size();
+    if (x >= next_x) {
+      new_x = max(0, next_x - 1);
+    }
+  }
+  return Posn(new_x, new_y);
+}
+
+// Down
+Posn CmdMoveBase::move_j(TextModel *model) {
+  int x = model->get_x();
+  int y = model->get_y();
+  int new_x = x;
+  int new_y = y;
+  if (y < model->get_lines()->size() - 1) {
+    new_y = y + 1;
+    int next_x = model->get_lines()->at(y + 1).size();
+    if (x >= next_x) {
+      new_x = max(0, next_x - 1);
+    }
+  }
+  return Posn(new_x, new_y);
+}
+
 // Returns posn of start of next word
-Posn CmdMove::start_next_word(TextModel *model) {
+Posn CmdMoveBase::start_next_word(TextModel *model) {
   // Begining of next word
   // If non left on line, start begining of next line
   string ln = model->get_line_at();
@@ -19,7 +69,7 @@ Posn CmdMove::start_next_word(TextModel *model) {
 }
 
 // Returns posn of start of prev word
-Posn CmdMove::start_prev_word(TextModel *model) {
+Posn CmdMoveBase::start_prev_word(TextModel *model) {
   string ln = model->get_line_at();
   size_t first = ln.rfind(' ', model->get_x() - 2);
   if (first == string::npos) {
@@ -45,35 +95,35 @@ void CmdMove::exec(TextModel *model) {
 
   switch (move_type) {
     case 'h': {
-      if (x > 0)
-        model->set_x(x - 1);
-      else
+      Posn end = move_h(model);
+      if (model->get_posn() == end)
         beep();
+      else
+        model->set_posn(end);
       break;
     }
     case 'l': {
-      if (x + 1 < model->get_lines()->at(y).size())
-        model->set_x(x + 1);
-      else
+      Posn end = move_l(model);
+      if (model->get_posn() == end)
         beep();
+      else
+        model->set_posn(end);
       break;
     }
     case 'k': {
-      if (y > 0) {
-        model->set_y(y - 1);
-        int new_x = model->get_lines()->at(y - 1).size();
-        if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
-      } else
+      Posn end = move_k(model);
+      if (model->get_posn() == end)
         beep();
+      else
+        model->set_posn(end);
       break;
     }
     case 'j': {
-      if (y < model->get_lines()->size() - 1) {
-        model->set_y(y + 1);
-        int new_x = model->get_lines()->at(y + 1).size();
-        if (x >= new_x) model->set_x(new_x == 0 ? new_x : new_x - 1);
-      } else
+      Posn end = move_j(model);
+      if (model->get_posn() == end)
         beep();
+      else
+        model->set_posn(end);
       break;
     }
     case '0':
