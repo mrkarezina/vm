@@ -164,6 +164,8 @@ void CmdMove::exec(TextModel *model) {
       throw invalid_argument("Unrecognized move_type: " + to_string(move_type));
       break;
   }
+  // Motion commands should not replace prev command in history
+  model->history->set_replace_prev_command(false);
 }
 
 CmdcC::CmdcC(char c) : change_type{c} {}

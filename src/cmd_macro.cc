@@ -17,3 +17,12 @@ CmdPlayBackMacro::CmdPlayBackMacro(char macro) : macro{macro} {}
 void CmdPlayBackMacro::exec(TextModel *model) {
   model->apply(model->macros->generate_playback_command(macro));
 }
+
+void CmdPlaybackPrev::exec(TextModel *model) {
+  if (model->history->get_prev_cmd() != nullptr) {
+    std::shared_ptr<CmdBase> prev = model->history->get_prev_cmd();
+    model->apply(prev);
+  }
+  // Prevent recording undo command resulting in infinite loop
+  model->history->set_replace_prev_command(false);
+}

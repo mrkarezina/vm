@@ -115,10 +115,9 @@ void TextModel::add_view(unique_ptr<ViewBase> view) {
 
 void TextModel::apply(shared_ptr<CmdBase> cmd) {
   history->record_state(this);
-  if (macros->is_recording_macro()) {
-    macros->record_command(cmd);
-  }
+  macros->record_command(cmd);
   cmd->exec(this);
+  history->record_prev_command(cmd);
 }
 
 void TextModel::render() {

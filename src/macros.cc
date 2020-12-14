@@ -7,7 +7,9 @@ using namespace std;
 Macros::Macros() { recording_macro = false; }
 
 void Macros::record_command(std::shared_ptr<CmdBase> cmd) {
-  recorded_commands[current_letter].push_back(cmd);
+  if (is_recording_macro()) {
+    recorded_commands[current_letter].push_back(cmd);
+  }
 }
 
 void Macros::set_current_letter(char macro) { current_letter = macro; }

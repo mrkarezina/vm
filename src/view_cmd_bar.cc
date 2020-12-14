@@ -43,7 +43,7 @@ void ViewCmdBar::draw(TextModel *model) {
   if (model->is_write_mode()) {
     ln += "-- INSERT --";
   } else if (model->get_cmd_so_far().size() > 0) {
-    model->get_cmd_so_far();
+    ln += model->get_cmd_so_far();
   } else if (model->is_display_save_warning()) {
     ln += "No write since last change (add ! to override)";
     model->set_display_save_warning(false);

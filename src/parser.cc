@@ -67,6 +67,9 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
   if (cur_cmd[0] == '@' && cur_cmd.size() == 2)
     return make_shared<CmdPlayBackMacro>(cur_cmd[1]);
 
+  if (cur_cmd[0] == '.' && cur_cmd.size() == 1)
+    return make_shared<CmdPlaybackPrev>();
+
   // Clear any motion
   if (cur_cmd[0] == 'c' && cur_cmd.size() > 1 &&
       vec_contains<char>(motion_cmd_list, c))
