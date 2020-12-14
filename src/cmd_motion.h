@@ -54,8 +54,14 @@ class CmdJump : public CmdBase {
  * Change replace commands
  * c[any motion], cc
  */
-class CmdcC : public CmdBase {
+class CmdcC : public CmdMoveBase {
   char change_type;
+
+  /**
+   * Same as delete_core except will clear instead of delete
+   * the end.y line.
+   */
+  void clear_core(TextModel *model, Posn end);
 
  public:
   CmdcC(char c);
