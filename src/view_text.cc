@@ -44,8 +44,8 @@ void ViewText::set_scroll_focus_y(TextModel *model) {
   // Scroll down if Y greater than what fits in window
   if (y - scroll_focus_y > max_diff) scroll_focus_y = y - max_diff;
   // Scroll up
-  if (y - scroll_focus_y < max_close && scroll_focus_y > 0) {
-    scroll_focus_y = y - max_close;
+  else if (y - scroll_focus_y < max_close && scroll_focus_y > 0) {
+    scroll_focus_y = max(0, y - max_close);
   }
 }
 
