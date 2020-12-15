@@ -29,8 +29,8 @@ class History {
   void record_prev_command(std::shared_ptr<CmdBase> cmd);
   /**
    * Indicates not to replace the prev command in history.
-   * Used by motion commands.
-   */ 
+   * Used by commands which don't support the '.' command (repeat)
+   */
   void set_replace_prev_command(bool replace);
 
   int state_size();

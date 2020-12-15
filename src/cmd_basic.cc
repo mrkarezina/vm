@@ -118,7 +118,9 @@ void CmdJ::exec(TextModel *model) {
   }
 }
 
-void CmdStall::exec(TextModel *model) {}
+void CmdStall::exec(TextModel *model) {
+  model->history->set_replace_prev_command(false);
+}
 
 CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}
 

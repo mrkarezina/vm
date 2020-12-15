@@ -13,8 +13,7 @@ shared_ptr<vector<string>> load_lines(string filename) {
     }
     file.close();
   } else {
-    cerr << "Failed to open file: " << filename << endl;
-    exit(1);
+    lines->push_back("");
   }
   return lines;
 }
