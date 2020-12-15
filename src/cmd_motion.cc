@@ -75,28 +75,32 @@ Posn CmdMoveBase::start_next_word(TextModel *model) {
   size_t first = ln.find(' ', model->get_x());
   if (first == string::npos) {
     if (model->get_y() < model->get_lines()->size() - 1) {
-      return Posn{0, model->get_y() + 1};
+      return Posn(0, model->get_y() + 1);
+    } else if (model->get_y() == 0 ||
+               model->get_y() == model->get_lines()->size() - 1) {
+      return Posn(line_size_to_x_cord(model->get_y(), model), model->get_y());
     } else {
-      return Posn{0, model->get_y()};
+      return Posn(0, model->get_y());
     }
   }
-  return Posn{(int)first + 1, model->get_y()};
+  return Posn((int)first + 1, model->get_y());
 }
 
 // Returns posn of start of prev word
 Posn CmdMoveBase::start_prev_word(TextModel *model) {
+  if (model->get_x() == 0 && model->get_y() == 0) return model->get_posn();
   string ln = model->get_line_at();
   size_t first = ln.rfind(' ', model->get_x() - 2);
   if (first == string::npos) {
-    if (0 < model->get_y()) {
+    if (model->get_y() > 0) {
       // New posn is end of previous line
-      return Posn{(int)model->get_line_at(model->get_y() - 1).size(),
-                  model->get_y() - 1};
+      return Posn(line_size_to_x_cord(model->get_y() - 1, model),
+                  model->get_y() - 1);
     } else {
-      return Posn{0, model->get_y()};
+      return Posn(0, model->get_y());
     }
   }
-  return Posn{(int)first + 1, model->get_y()};
+  return Posn((int)first + 1, model->get_y());
 }
 
 CmdMove::CmdMove(char c) : move_type{c} {}

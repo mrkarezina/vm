@@ -74,7 +74,7 @@ CmdInsert::CmdInsert(char c) : insert_type{c} {}
 void CmdInsert::exec(TextModel *model) {
   switch (insert_type) {
     case 'a':
-      model->set_x(model->get_x() + 1);
+      if (model->get_line_at().size() > 0) model->set_x(model->get_x() + 1);
       break;
     case 'A':
       model->set_x(model->get_lines()->at(model->get_y()).size());

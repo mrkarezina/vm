@@ -96,7 +96,12 @@ void TextModel::delete_line_concat(int y) {
   lines->erase(lines->begin() + y);
 }
 
-void TextModel::delete_line(int y) { lines->erase(lines->begin() + y); }
+void TextModel::delete_line(int y) {
+  if (lines->size() == 1)
+    clear_line(0);
+  else
+    lines->erase(lines->begin() + y);
+}
 
 void TextModel::clear_line(int y) { lines->at(y) = ""; }
 
