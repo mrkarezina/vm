@@ -58,9 +58,14 @@ void CmdBackspace::exec(TextModel *model) {
 }
 
 void CmdEsc::exec(TextModel *model) {
-  if (model->is_write_mode())
+  if (model->is_write_mode()) {
     model->toggle_mode();
-  else
+    // Ensure that x is not left past length of line
+    if (model->get_x() >= model->get_line_at().size()) {
+      int ln_size = model->get_line_at().size();
+      model->set_x(max(ln_size - 1, 0));
+    }
+  } else
     model->set_cmd_so_far("");
 }
 
