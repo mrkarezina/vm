@@ -136,13 +136,19 @@ CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}
 void CmdLineSelection::exec(TextModel *model) {
   if (selection == "0") {
     model->set_y(0);
+    model->set_x(0);
   } else if (selection == "$") {
     model->set_y((int)model->get_lines()->size() - 1);
+    model->set_x(0);
   } else {
-    int line = stoi(selection);
-    model->set_y(min(line, (int)model->get_lines()->size() - 1));
+    try {
+      int line = stoi(selection);
+      model->set_y(min(line - 1, (int)model->get_lines()->size() - 1));
+      model->set_x(0);
+    } catch (std::invalid_argument &e) {
+      // Not a line number
+    }
   }
-  model->set_x(0);
 }
 
 CmdsS::CmdsS(char c) : sub_type{c} {}
