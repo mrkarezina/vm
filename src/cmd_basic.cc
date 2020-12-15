@@ -122,6 +122,15 @@ void CmdStall::exec(TextModel *model) {
   model->history->set_replace_prev_command(false);
 }
 
+Cmdr::Cmdr(char c) : replacement{c} {}
+
+void Cmdr::exec(TextModel *model) {
+  if (model->get_line_at().size() > 0 &&
+      model->get_x() <= line_size_to_x_cord(model->get_y(), model)) {
+    model->write_char(replacement, model->get_x(), model->get_y());
+  }
+}
+
 CmdLineSelection::CmdLineSelection(string selection) : selection{selection} {}
 
 void CmdLineSelection::exec(TextModel *model) {

@@ -104,6 +104,9 @@ std::shared_ptr<CmdBase> Parser::parse_command_mode(int c) {
 
   if (cur_cmd[0] == 'J' && cur_cmd.size() == 1) return make_shared<CmdJ>();
 
+  if (cur_cmd[0] == 'r' && cur_cmd.size() == 2)
+    return make_shared<Cmdr>(cur_cmd[1]);
+
   // Search
   if (cur_cmd.size() > 1 && cur_cmd[0] == 'f') {
     return make_shared<Cmdf>(c);

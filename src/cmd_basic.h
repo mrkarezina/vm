@@ -39,6 +39,17 @@ class CmdStall : public CmdBase {
 };
 
 /**
+ * Replace a character
+ */ 
+class Cmdr : public CmdBase {
+  char replacement;
+ public:
+ Cmdr(char c);
+  void exec(TextModel *model);
+};
+
+
+/**
  * Combine two lines together.
  */
 class CmdJ : public CmdBase {
