@@ -4,6 +4,7 @@
 #include <ncurses.h>
 
 #include "cmd_base.h"
+#include "cmd_util.h"
 #include "text_model.h"
 
 class CmdMoveBase : public CmdBase {

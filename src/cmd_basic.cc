@@ -113,9 +113,7 @@ void CmdJ::exec(TextModel *model) {
       x += 1;
     }
     model->delete_line(model->get_y() + 1);
-    if (model->get_y() >= model->get_lines()->size()) {
-      model->set_y(model->get_lines()->size() - 1);
-    }
+    ensure_y_in_bounds(model);
     model->set_x(x);
   }
 }

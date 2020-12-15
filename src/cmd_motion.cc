@@ -195,13 +195,10 @@ void CmdcC::clear_core(TextModel *model, Posn end) {
           model->delete_line(model->get_y());
         }
         model->clear_line(model->get_y());
-        // If you delete the last line, need to move y back
-        if (model->get_y() >= model->get_lines()->size()) {
-          model->set_y(model->get_lines()->size() - 1);
-        }
       }
       model->set_x(0);
     }
+    ensure_y_in_bounds(model);
   }
 }
 
@@ -291,13 +288,10 @@ void CmddD::delete_core(TextModel *model, Posn end) {
         for (int i = 0; i < abs(cur.y - end.y); i++) {
           model->delete_line(model->get_y());
         }
-        // If you delete the last line, need to move y back
-        if (model->get_y() >= model->get_lines()->size()) {
-          model->set_y(model->get_lines()->size() - 1);
-        }
       }
       model->set_x(0);
     }
+    ensure_y_in_bounds(model);
   }
 }
 

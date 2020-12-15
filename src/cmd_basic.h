@@ -8,6 +8,7 @@
 #include "cmd_base.h"
 #include "posn.h"
 #include "text_model.h"
+#include "cmd_util.h"
 
 class CmdWrite : public CmdBase {
   char toWrite;
