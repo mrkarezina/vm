@@ -1,25 +1,32 @@
 # vm
 
-## Project Breakdown
+Vm is a Vim-like text editor.
 
-### Timeline
+## Supported Commands
 
-| Stage          | Plan                                                         | Date   |
-| -------------- | :----------------------------------------------------------- | ------ |
-| MVP            | - Skeletons of all classes, revaluate UML if needed.<br>- Open vm for a file and display contents.<br>- Cursor movement<br>- Write / delete characters<br>- Esc, :wq, and save file<br>- Test suite | Dec 1  |
-| Basic features | - All text commands                                          | Dec 5  |
-|                | - Undo<br>- Search<br>- Macros                               | Dec 10 |
-| Extra Features | - Faster search<br>- Optimize undo feature for memory        | Dec 14 |
+```
+a b cc c[any motion] dd d[any motion] f h i j k l n o p r s u w x yy y[any motion]
+A F I J N O P R S X ^ $ 0 . ; / ?
+^b ^d ^f ^g ^u
+:w :q :wq :q! :r :0 :$ :line-number
+q
+@
+```
 
-## Intro
+## Demo
 
-Vm is like Vim but worse. If you're looking for a highly configurable text editor built to make creating and changing any kind of text very efficient, look elsewhere.
+![Demo](./demo.gif)
+
+## Getting Started
+
+```
+make
+./bin/vm "tests/test.txt"
+```
 
 ## Overview
 
-*Your document should provide an overview of all aspects of your project, including how, at a high level, they were implemented. If you made use of design patterns, clearly indicate where. Your system should employ good object-oriented design techniques, as presented in class.*
-
-Vm was designed with the model view controller paradigm in mind has 3 main families of classes. Models, views, and commands.
+Vm was designed with the model view controller paradigm in mind and has 3 families of classes. Models, views, and commands.
 
 At the highest level the views render the data stored in the text model. The controller parses the input to generate a command which is then applied to the text model. This process is demonstrated by the `render` method of the `TextModel`.
 
@@ -38,7 +45,7 @@ The model family only contains a single class, `TextModel`. The `TextModel` cont
 
 ### View
 
-Rendering is implemented using the `ncurses` library which allows for creating text based user interfaces. The views are stateless and solely responsible for displaying the state of the text model. Vm uses several windows to compose the entire view. These include the status bar at the bottom of the application and a view for the text being edited. The observer pattern is used to "subscribe" views to the `TextModel`. The `TextModel` stores the views as a vector of references to the `ViewBase` family of classes. The render loop calls the `draw` method of each view, as demonstrated in the implementation. 
+Rendering is implemented using the ncurses library which allows for creating text based user interfaces. The views are stateless and solely responsible for displaying the state of the text model. Vm uses several windows to compose the entire view. These include the status bar at the bottom of the application and a view for the text being edited. The observer pattern is used to "subscribe" views to the `TextModel`. The `TextModel` stores the views as a vector of references to the `ViewBase` family of classes. The render loop calls the `draw` method of each view, as demonstrated in the implementation. 
 
 ```c++
 void TextModel::render() {
@@ -52,7 +59,7 @@ The `TextModel` object passes itself to each view via the `this` pointer. This a
 
 ### Command
 
-Each command or family of commands is implemented as a class. These commands take a reference to the text model and use its getter and setter methods to perform the intended effect. This may include changing the text or the position of the cursor. The interaction between the `TextModel` and commands follows the visitor pattern. This is demonstrated by the `apply` method of the `TextModel`, where a command 'visits' the text model.
+Each command or family of commands is implemented as a class. These commands take a reference to the text model and use its getter and setter methods to perform the intended effect. This may include changing the text or the position of the cursor. The interaction between the `TextModel` and commands follows the visitor pattern. This is demonstrated by the `apply` method of the `TextModel`:
 
 ```c++
 void TextModel::apply(unique_ptr<CmdBase> cmd) {
@@ -64,11 +71,7 @@ The `TextModel` passes itself to the `exec` method of each command via the `this
 
 The `Controller ` parses all user input. Its job is the determine which command or series of commands correspond to the character the user entered. The corresponding command of type `CmdBase` is then generated.
 
-
-
 ## Design
-
-*Techniques you used to solve the various design challenges in the project. Describe how your design supports the possibility of various changes to the program specification.*
 
 This section explores the design challenges, design tradeoffs, and flexibility of the chosen design.
 
@@ -110,44 +113,4 @@ void CmdPlayBackMacro::exec(TextModel *model) {
 ```
 
 Grouping multiplers and macros into a `CmdMultiCommand` simplifies undo functionality as well since history is recorded after the application of a command to the model. Since a series of commands in `CmdMultiCommand` is recorded as a single command in history they can be undone easily.
-
-## Bonus Features
-
-Some small bonus features include:
-
-- Multipliers on macros and nested macros
-- Dot operator inside macros
-- Up and down arrow keys
-- Scroll percentage
-
-The most notable of these are nested macros which might be an expectation already. This was possible to implemented since the series of commands corresponding to a macro generates a corresponding `CmdMultiCommand` object. Since every command inherits from `CmdBase`, a new macro may record a series of commands including new movements / edits with a previous macro (`CmdMultiCommand`) thrown into the mix.
-
-## Questions
-
-### How would you support multiple open files?
-
-The constructor for `TextModel` takes a file name. An instance of `TextModel` stores all the information required to edit the file. This includes cursor position, lines of text, history and so on. To support multiple files a new higher level model would be created which would store a vector of `TextModels` similar to the model storing a vector of views, well call this `FileModel`.
-
-There are two mistakes in the current implementation.The run loop and controller should be in the top level model instead of `TextModel`. Once this is fixed, by moving the run loop to the top level model, commands from the controller could be applied to `FileModel` instead of `TextModel` by swapping the `TextModel` with FileModel in the top level model. If the command switches files `FileModel` would simply switch the currently selected `TextModel`. Otherwise all other editing commands are forwarded and applied to `TextModel`.
-
-### Support for read only files?
-
-To add support for either of the options you would first have to check if a file is read only. We could accomplish this by trying to open a `std::ofstream` and checking if it successfully opened `ofs.is_open()`. You could add a property to the `TextModel` which stores the read permissions.
-
-#### Option 1 (Preventing edits)
-
-Commands that modify text can implement a `bool modifies_text()` method which returns true if they mutate the text. In the run loop after a command is parsed an if statement could be added to check if `modifies_text()` is true. In that case the command is not applied. This would require implementing  `modifies_text()` for every command.
-
-#### Option 2 (Edits with warning)
-
-The read permissions property in the `TextModel` would be used to display a warning that the file is read only. If the write command is called without a new filename and `read_only` is asserted you would play a beep sound. If the write command is called with a new file saving would work like usual. This would require implementing a single if statement in `CmdSaveLines`.
-
-### What would you have done differently if you had the chance to start over?
-
-1. Move the main run loop and controller to a top level model instead of keeping them in `TextModel`. This would make it trivial to support higher level functionality like multiple tabs / support for multiple files as described in the questions.
-2. Decorators for command meta information. It would be helpful to have a decorator to set properties such as `modifies_text` or `dont_record_in_history`. This would make it easier to implement changes such as preventing edits, or implementing undo which groups certain commands together.
-3. Structure parsing to be less brittle. Currently the order of the if statements in the parsing functions matters which is very error prone to accidentally adding a new command which will prevent a previously matching command from being matched accidentally.
-4. For the MVP I had simple parsing function that would just match characters, however as the parsing logic grew more complex I continued adding if statements for each new command without having an idea how the overall parsing would work. It was challenging to refactor the parsing logic into functions parsing families of commands since the initial giant parsing function was brittle and the logic for what will be matched was hard to interpret. It still is and this is the weakest point of the project, I would give parsing more though had I started over.
-
-
 
