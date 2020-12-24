@@ -11,6 +11,7 @@ shared_ptr<vector<string>> load_lines(string filename) {
     while (getline(file, line)) {
       lines->push_back(line);
     }
+    if (lines->size() == 0) lines->push_back("");
     file.close();
   } else {
     lines->push_back("");

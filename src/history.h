@@ -1,6 +1,7 @@
 #ifndef HISTORY_H
 #define HISTORY_H
 
+#include <memory>
 #include <string>
 #include <vector>
 

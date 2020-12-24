@@ -87,8 +87,6 @@ class TextModel {
   std::unique_ptr<History> history;
   std::unique_ptr<Macros> macros;
 
-  // Arbitrary state data for commands
-  // TODO: getter setters
   std::map<std::string, std::string> state_str;
   std::map<std::string, int> state_int;
 };
